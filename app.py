@@ -82,10 +82,11 @@ class NeuroExpertMaster:
                 st_raw.append(p_data.get("status", ""))
             for t in tags:
                 if t != "па": st_raw.append(self.lib.get("tags", {}).get(t, ""))
-            if not is_norm_logic and self.sr: st_raw.append(self.sr.get(typ_key, self.sr.get("0", "")))
-            # ВАЖНО: Берем именно суицидальный риск для статуса (ВСЕГДА)
-            s_risk_lib = self.lib.get("suicide_risk", {})
-            st_raw.append(s_risk_lib.get(typ_key, s_risk_lib.get("0", "")))
+            if hasattr(self, 'sr') and self.sr:
+                # Берем фразу по типу профиля (3, 8, 0*) или дефолт "0"
+                s_phrase = self.sr.get(typ_key, self.sr.get("0", ""))
+                if s_phrase:
+                    st_raw.append(s_phrase)
             status_text = ". ".join([self.apply_gender(p, gen, is_endo).rstrip('.') for p in st_raw if p]) + "."
 
             # --- 2. РЕЗУЛЬТАТЫ ---
