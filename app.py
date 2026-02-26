@@ -76,3 +76,5 @@ if st.button("🚀 СГЕНЕРИРОВАТЬ"):
     # Кнопка Ворд
     word_data = expert.save_to_word(res)
     st.download_button("📥 Скачать .docx", word_data, f"{fio}.docx")
+    pdf_data = expert.save_to_pdf(res)
+    st.download_button("📄 Скачать .pdf", pdf_data, f"{fio}.pdf", mime="application/pdf")
