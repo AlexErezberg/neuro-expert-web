@@ -161,13 +161,6 @@ class NeuroExpertMaster:
             return f"СТАТУС:\n{status_text}\n\nРЕЗУЛЬТАТЫ:\n{' '.join(f_res)}\n\nЗАКЛЮЧЕНИЕ:\n" + "\n\n".join([p.strip() for p in final if p.strip()])
         except Exception: return traceback.format_exc()
 
-engine = NeuroExpertMaster('expert_matrix.json')
-while True:
-    code = input("\nКОД: ").strip()
-    if not code: continue
-    if code.lower() == 'exit': break
-    print("\n" + "="*80 + "\n" + engine.run(code, input("НАДСТРОЙКИ: "), input("ТЕГИ: ")) + "\n" + "="*80)
-
 # --- 1. ЗАГЛУШКА ДВИЖКА (ПОКА НЕ ТРОГАЕМ, ЖДЕМ КОМАНДЫ) ---
 class NeuroExpertMaster:
     def __init__(self, matrix): self.lib = matrix
