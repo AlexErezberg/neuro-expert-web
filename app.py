@@ -199,8 +199,8 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 
 with st.sidebar:
     st.header("📋 Паспорт")
-    fio = st.text_input("ФИО", "Иванов И.И.")
-    p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
+    fio = st.sidebar.text_input("ФИО", "Иванов И.И.", key="fio_input")
+    p_type = st.sidebar.selectbox("Тип", PROFILES, key="profile_select", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
     p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
 st.subheader("📊 Функции (0-5)")
@@ -209,13 +209,13 @@ scores = []
 cols = st.columns(5)
 for i, name in enumerate(f_names):
     with cols[i % 5]:
-        scores.append(st.slider(name, 0, 5, 0))
+        scores.append(st.slider(name, 0, 5, 0, key=f"s_{i}"))
 
 # Выпадающие списки из ТВОЕГО JSON
 adj_keys = list(matrix.get("phenomenology_adjustments", {}).keys())
-presets = st.multiselect("🛠 Надстройки", adj_keys)
+presets = st.multiselect("🛠 Надстройки", adj_keys, key="adj_ms")
 tag_keys = list(matrix.get("tags", {}).keys())
-selected_tags = st.multiselect("🏷 Теги", tag_keys)
+selected_tags = st.multiselect("🏷 Теги", tag_keys, key="tags_ms")
 
 # ЗАПУСК ЭНДЖИНА
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
