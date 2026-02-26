@@ -1,90 +1,64 @@
 import streamlit as st
 import json
 import random
-from docx import Document
 import io
-from fpdf import FPDF
+from docx import Document
 
-# 1. ТВОЙ СВЯЩЕННЫЙ КЛАСС (Вставь сюда СВОЙ код полностью)
-# Я ставлю заглушку, замени её своим NeuroExpertMaster со всеми методами!
-
+# --- 1. ТВОЙ СВЯЩЕННЫЙ КЛАСС (ВСТАВЬ СЮДА СВОЙ NeuroExpertMaster ЦЕЛИКОМ) ---
 class NeuroExpertMaster:
     def __init__(self, matrix):
         self.lib = matrix
-        # ... тут все твои инициализации (rv, nv и т.д.) ...
-    
+        self.rv = self.lib.get("risk_verification", {})
+        self.nv = self.lib.get("neuro_vectors", {})
     def apply_gender(self, text, gen, is_endo):
-        # ... твой метод утюга ...
-        return text
-
+        return text # Твой метод утюга
     def run(self, code_str, pr_in, t_in):
-        # ... твой метод RUN ...
-        return "Здесь будет результат работы твоего движка"
-
+        return "Здесь должен быть результат твоего метода RUN"
     def save_to_word(self, text):
-        # ... твой метод сохранения ...
         doc = Document()
         doc.add_paragraph(text)
         bio = io.BytesIO()
         doc.save(bio)
         return bio.getvalue()
 
-# 2. ЗАГРУЗКА ДАННЫХ
+# --- 2. ЗАГРУЗКА ---
 @st.cache_data
 def load_matrix():
-    # 'utf-8-sig' автоматически отрезает невидимую метку BOM
     with open('expert_matrix.json', 'r', encoding='utf-8-sig') as f:
         return json.load(f)
 
 matrix = load_matrix()
 
-# 3. ИНТЕРФЕЙС STREAMLIT
-st.set_page_config(page_title="NeuroExpert Web", page_icon="🧠")
-st.title("🧠 Система экспертной оценки коннектома")
+# --- 3. ИНТЕРФЕЙС ---
+st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# Боковая панель
 with st.sidebar:
-    st.header("Паспорт")
-    gender = st.radio("Пол", ["Мужской", "Женский"])
-    profile = st.selectbox("Тип профиля", ["0*", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
+    st.header("📋 Паспорт")
+    fio = st.text_input("ФИО", "Иванов И.И.")
+    p_type = st.selectbox("Тип", ["0*", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
+    p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
-# Слайдеры баллов
-st.subheader("Оценка функций (0-5)")
-cols = st.columns(2)
-funcs = ["Нейродинамика", "Гнозис", "Праксис кин.", "Праксис дин.", "Праксис констр.", "Речь (аф)", "Речь (диз)", "Память", "Мышление", "Внимание"]
+st.subheader("📊 Функции (0-5)")
+f_names = ["Внимание", "Зрит.Гнозис", "Простр.Гнозис", "Дин.Праксис", "Кин.Праксис", "Констр.Праксис", "Счет", "Речь", "Память", "Мышление"]
 scores = []
-for i, f in enumerate(funcs):
-    with cols[i % 2]:
-        scores.append(st.slider(f, 0, 5, 0))
+cols = st.columns(5)
+for i, name in enumerate(f_names):
+    with cols[i % 5]:
+        scores.append(st.slider(name, 0, 5, 0))
 
-# Надстройки и теги
-adj_keys = list(matrix.get("phenomenology_adjustments", {}).keys())
-presets = st.multiselect("Надстройки", adj_keys)
-tags_in = st.text_input("Теги через запятую")
+adj_list = list(matrix.get("phenomenology_adjustments", {}).keys())
+presets = st.multiselect("🛠 Надстройки", adj_list)
+tags_list = list(matrix.get("tags", {}).keys())
+selected_tags = st.multiselect("🏷 Теги", tags_list)
 
-# ЗАПУСК
-if st.button("СГЕНЕРИРОВАТЬ"):
-       expert = NeuroExpertMaster(matrix)
-        gen_mark = 'ж' if p_gen == "ж" else 'м'
-        full_code = f"{p_type}{gen_mark}/{''.join(map(str, scores))}"
-        
-        # Запуск твоего RUN
-        res = expert.run(full_code, ",".join(presets), ",".join(selected_tags))
-        
-        st.markdown("### Итоговый протокол:")
-        st.text_area("", res, height=450)
-        
-        # --- БЛОК ВОРД ---
-        doc_io = io.BytesIO()
-        doc = Document()
-        doc.add_paragraph(f"РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ: {patient_fio}")
-        doc.add_paragraph(res)
-        doc.save(doc_io)
-        st.download_button("📥 Скачать .docx", doc_io.getvalue(), f"{patient_fio}.docx")
-        
-        # --- БЛОК PDF (xhtml2pdf) ---
-        from xhtml2pdf import pisa
-        pdf_buffer = io.BytesIO()
-        html_template = f"<html><body><h2>{patient_fio}</h2><pre>{res}</pre></body></html>"
-        pisa.CreatePDF(html_template, dest=pdf_buffer, encoding='utf-8')
-        st.download_button("📄 Скачать .pdf", pdf_buffer.getvalue(), f"{patient_fio}.pdf")
+if st.button("🚀 СГЕНЕРИРОВАТЬ"):
+    full_code = f"{p_type}{p_gen}/{''.join(map(str, scores))}"
+    expert = NeuroExpertMaster(matrix)
+    res = expert.run(full_code, ",".join(presets), ",".join(selected_tags))
+    
+    st.markdown("### Протокол:")
+    st.text_area("", res, height=400)
+    
+    # Кнопка Ворд
+    word_data = expert.save_to_word(res)
+    st.download_button("📥 Скачать .docx", word_data, f"{fio}.docx")
