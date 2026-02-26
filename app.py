@@ -21,6 +21,7 @@ class NeuroExpertMaster:
                 return None
             
             self.rv = deep_find(self.lib, "risk_verification")
+            self.sr = deep_find(self.lib, "suicide_risk")
             self.nv = deep_find(self.lib, "neuro_vectors")
             # st.toast — это маленькое всплывающее окно в Стримлите
             st.toast("✅ v66.1-FINAL. БЕСПЕРЕБОЙНИК ЗАПУЩЕН")
