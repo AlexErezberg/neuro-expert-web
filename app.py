@@ -71,7 +71,7 @@ class NeuroExpertMaster:
             is_norm_logic = typ_key.startswith('0') and sum(s) < 10
             presets = [p.strip() for p in pr_in.split(',') if p.strip()]; tags = [t.strip().lower() for t in t_in.split(',') if t.strip()]
 
-            # --- 1. СТАТУС ---
+            # --- 1. Психологический статус ---
             st_raw = [intros.get(typ_key, intros.get("0", "")), cl_bases.get(raw_typ if raw_typ in cl_bases else str(round(sum(s) / 10)), "")]
             # Добавляем ПА в статус, если есть тег
             if "па" in tags: st_raw.append(self.lib.get("tags", {}).get("па", ""))
@@ -165,7 +165,7 @@ class NeuroExpertMaster:
                 risk_opts = self.rv.get(typ_key, self.rv.get("0", ""))
                 final.append(self.apply_gender(risk_opts, gen, is_endo))
 
-            return f"СТАТУС:\n{status_text}\n\nРЕЗУЛЬТАТЫ:\n{' '.join(f_res)}\n\nЗАКЛЮЧЕНИЕ:\n" + "\n\n".join([p.strip() for p in final if p.strip()])
+            return f"ПСИХОЛОГИЧЕСКИЙ СТАТУС:\n{status_text}\n\nРЕЗУЛЬТАТЫ:\n{' '.join(f_res)}\n\nЗАКЛЮЧЕНИЕ:\n" + "\n".join([p.strip() for p in final if p.strip()])
             return final_res
 
         except Exception: 
