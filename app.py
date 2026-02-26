@@ -184,6 +184,26 @@ def load_matrix():
 
 matrix = load_matrix()
 
+st.markdown("""
+    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 20px; border-radius: 15px; border-left: 5px solid #2e6bef; margin-bottom: 25px;">
+        <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+            🧠 <span style="color: #2e6bef;">Neuro</span>Expert <span style="font-weight: 200; font-size: 0.8em; opacity: 0.7;">Master Engine</span>
+        </h1>
+        <p style="color: #808495; font-style: italic; margin-top: 5px; font-size: 0.9em;">
+            Комплексная система анализа нейронных ансамблей и когнитивной когерентности v68.0
+        </p>
+    </div>
+    <style>
+    /* Анимация пульсации для пущего пафоса */
+    @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+    }
+    .stTitle { animation: pulse 3s infinite ease-in-out; }
+    </style>
+""", unsafe_allow_html=True)
+
 # --- 1. ФУНКЦИЯ СБРОСА (Вставлять СЮДА) ---
 def reset_app():
     if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
