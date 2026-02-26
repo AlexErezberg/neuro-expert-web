@@ -184,14 +184,15 @@ def load_matrix():
 
 matrix = load_matrix()
 
-# Оболочка
-st.set_page_config(page_title="NeuroExpert Web", layout="wide")
-st.title("🧠 NeuroExpert Master Engine")
+# --- 1. ФУНКЦИЯ СБРОСА (Вставлять СЮДА) ---
 def reset_app():
-    # Очищаем все ключи в памяти сессии
-    for key in st.session_state.keys():
-        del st.session_state[key]
-    st.rerun() # Перезапускаем приложение чистым
+    if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
+    if "profile_select" in st.session_state: st.session_state["profile_select"] = "0*"
+    for i in range(10):
+        if f"s_{i}" in st.session_state: st.session_state[f"s_{i}"] = 0
+    if "adj_ms" in st.session_state: st.session_state["adj_ms"] = []
+    if "tags_ms" in st.session_state: st.session_state["tags_ms"] = []
+    st.rerun()
 
 # Кнопка сброса в сайдбаре (самая верхняя)
 if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
@@ -199,12 +200,12 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 
 with st.sidebar:
     st.header("📋 Паспорт")
-    fio = st.sidebar.text_input("ФИО", "Иванов И.И.", key="fio_input")
-    p_type = st.sidebar.selectbox(
-    "Тип", 
-    ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], 
-    key="profile_select"
-)
+    # Кнопка сброса (под заголовком Паспорт)
+    if st.button("♻️ СБРОСИТЬ ВСЁ"):
+        reset_app()
+    
+    fio = st.text_input("ФИО", "Иванов И.И.", key="fio_input")
+    p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], key="profile_select")
     p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
 st.subheader("📊 Функции (0-5)")
