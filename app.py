@@ -1,61 +1,78 @@
-python
-
 import streamlit as st
 import json
 import random
 from docx import Document
+import io
 
-# Настройка страницы
-st.set_page_config(page_title="NeuroExpert Web", page_icon="🧠")
+# 1. ТВОЙ СВЯЩЕННЫЙ КЛАСС (Вставь сюда СВОЙ код полностью)
+# Я ставлю заглушку, замени её своим NeuroExpertMaster со всеми методами!
 
-# Загрузка твоей матрицы
+class NeuroExpertMaster:
+    def __init__(self, matrix):
+        self.lib = matrix
+        # ... тут все твои инициализации (rv, nv и т.д.) ...
+    
+    def apply_gender(self, text, gen, is_endo):
+        # ... твой метод утюга ...
+        return text
+
+    def run(self, code_str, pr_in, t_in):
+        # ... твой метод RUN ...
+        return "Здесь будет результат работы твоего движка"
+
+    def save_to_word(self, text):
+        # ... твой метод сохранения ...
+        doc = Document()
+        doc.add_paragraph(text)
+        bio = io.BytesIO()
+        doc.save(bio)
+        return bio.getvalue()
+
+# 2. ЗАГРУЗКА ДАННЫХ
 @st.cache_data
-def load_data():
+def load_matrix():
     with open('expert_matrix.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
-matrix = load_data()
+matrix = load_matrix()
 
-# ШАПКА
+# 3. ИНТЕРФЕЙС STREAMLIT
+st.set_page_config(page_title="NeuroExpert Web", page_icon="🧠")
 st.title("🧠 Система экспертной оценки коннектома")
-st.markdown("---")
 
-# ЛЕВАЯ ПАНЕЛЬ (Паспорт)
+# Боковая панель
 with st.sidebar:
-    st.header("Паспорт обследования")
-    fio = st.text_input("ФИО пациента", "Иванов И.И.")
-    age = st.number_input("Возраст", 18, 100, 60)
+    st.header("Паспорт")
     gender = st.radio("Пол", ["Мужской", "Женский"])
-    gen_key = 'а' if gender == "Женский" else ""
-    
-    st.markdown("---")
-    st.info("Версия движка: v66.3-GOD-MODE")
+    profile = st.selectbox("Тип профиля", ["0*", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
 
-# ОСНОВНОЙ БЛОК: ФУНКЦИИ (ПОЛЗУНКИ)
-st.subheader("1. Оценка когнитивных функций (0-5 баллов)")
+# Слайдеры баллов
+st.subheader("Оценка функций (0-5)")
 cols = st.columns(2)
-functions = ["Нейродинамика", "Гнозис", "Праксис кинет.", "Праксис динам.", "Праксис констр.", "Речь (афазии)", "Речь (дизартрии)", "Память", "Мышление", "Внимание"]
+funcs = ["Нейродинамика", "Гнозис", "Праксис кин.", "Праксис дин.", "Праксис констр.", "Речь (аф)", "Речь (диз)", "Память", "Мышление", "Внимание"]
 scores = []
-
-for i, func in enumerate(functions):
+for i, f in enumerate(funcs):
     with cols[i % 2]:
-        score = st.select_slider(f"{i+1}. {func}", options=[0, 1, 2, 3, 4, 5], value=0)
-        scores.append(score)
+        scores.append(st.slider(f, 0, 5, 0))
 
-# БЛОК: ПРОФИЛЬ И НАДСТРОЙКИ
-st.markdown("---")
-st.subheader("2. Клинический контекст")
-profile = st.selectbox("Тип профиля", ["0*", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
+# Надстройки и теги
+adj_keys = list(matrix.get("phenomenology_adjustments", {}).keys())
+presets = st.multiselect("Надстройки", adj_keys)
+tags_in = st.text_input("Теги через запятую")
 
-# Выбираем надстройки из твоего JSON
-adj_options = list(matrix.get("phenomenology_adjustments", {}).keys())
-presets = st.multiselect("Выберите надстройки (Апраксии, Афазии, Сетевые сбои)", adj_options)
-
-tags_in = st.text_input("Теги через запятую (па, пид, алко, манерный)", "")
-
-# КНОПКА ЗАПУСКА
-if st.button("СГЕНЕРИРОВАТЬ ЭКСПЕРТНОЕ ЗАКЛЮЧЕНИЕ"):
-    # Тут будет вызов твоего метода run (я его встрою в финальный app.py)
-    st.success("Заключение сформировано!")
-    st.text_area("Готовый протокол:", "Здесь появится твой ажурный текст Кудрявцева...", height=300)
-    st.button("Скачать в Word (.docx)")
+# ЗАПУСК
+if st.button("СГЕНЕРИРОВАТЬ"):
+    expert = NeuroExpertMaster(matrix)
+    # Формируем код: Тип+Пол / 10 цифр
+    gen_mark = 'ж' if gender == "Женский" else 'м'
+    code = f"{profile}{gen_mark}/{''.join(map(str, scores))}"
+    
+    # Вызов твоего RUN
+    res = expert.run(code, ",".join(presets), tags_in)
+    
+    st.markdown("### Итоговый протокол:")
+    st.write(res)
+    
+    # Скачивание Word
+    word_data = expert.save_to_word(res)
+    st.download_button("📥 Скачать .docx", word_data, "Expert_Report.docx")
