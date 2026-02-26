@@ -1,16 +1,17 @@
 import streamlit as st
 import json
-import io
-import re
-import traceback
 import random
+import traceback
+import re
+import io
 from docx import Document
 
 class NeuroExpertMaster:
     def __init__(self, matrix_data):
         try:
-            with open(path, 'r', encoding='utf-8-sig') as f:
-                self.lib = json.loads(f.read().strip('\ufeff'))
+            # СТЫКОВКА: Берем данные напрямую из памяти Стримлита
+            self.lib = matrix_data
+            
             def deep_find(data, target):
                 if isinstance(data, dict):
                     if target in data: return data[target]
@@ -18,10 +19,14 @@ class NeuroExpertMaster:
                         found = deep_find(v, target)
                         if found: return found
                 return None
+            
             self.rv = deep_find(self.lib, "risk_verification")
             self.nv = deep_find(self.lib, "neuro_vectors")
-            print("✅ v66.1-FINAL. БЕСПЕРЕБОЙНИК. Синтез, Паника и Вариативность на месте.")
-        except Exception as e: print(f"❌ Ошибка JSON: {e}"); self.lib = {}
+            # st.toast — это маленькое всплывающее окно в Стримлите
+            st.toast("✅ v66.1-FINAL. БЕСПЕРЕБОЙНИК ЗАПУЩЕН")
+        except Exception as e: 
+            st.error(f"❌ Ошибка инициализации: {e}")
+            self.lib = {}
 
     def apply_gender(self, text, gender, is_endo=False):
         if isinstance(text, list):
