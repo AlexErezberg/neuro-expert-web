@@ -31,7 +31,8 @@ class NeuroExpertMaster:
 # 2. ЗАГРУЗКА ДАННЫХ
 @st.cache_data
 def load_matrix():
-    with open('expert_matrix.json', 'r', encoding='utf-8') as f:
+    # 'utf-8-sig' автоматически отрезает невидимую метку BOM
+    with open('expert_matrix.json', 'r', encoding='utf-8-sig') as f:
         return json.load(f)
 
 matrix = load_matrix()
