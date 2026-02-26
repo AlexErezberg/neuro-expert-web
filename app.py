@@ -64,44 +64,27 @@ tags_in = st.text_input("Теги через запятую")
 
 # ЗАПУСК
 if st.button("СГЕНЕРИРОВАТЬ"):
-    expert = NeuroExpertMaster(matrix)
-    # Формируем код: Тип+Пол / 10 цифр
-    gen_mark = 'ж' if gender == "Женский" else 'м'
-    code = f"{profile}{gen_mark}/{''.join(map(str, scores))}"
-    
-    # Вызов твоего RUN
-    res = expert.run(code, ",".join(presets), tags_in)
-    
-    st.markdown("### Итоговый протокол:")
-    st.write(res)
-    
-    # Скачивание Word
-    word_data = expert.save_to_word(res)
-    st.download_button("📥 Скачать .docx", word_data, "Expert_Report.docx")
-
-from xhtml2pdf import pisa
-
-# Внутри блока кнопки "СГЕНЕРИРОВАТЬ"
-    # ГЕНЕРАЦИЯ PDF ЧЕРЕЗ HTML (Стерильно для кириллицы)
-    pdf_buffer = io.BytesIO()
-    # Создаем простой HTML-шаблон с поддержкой UTF-8
-    html_template = f"""
-    <html>
-    <head><meta charset="UTF-8"></head>
-    <body style="font-family: Arial, sans-serif;">
-    <h2 style="text-align: center;">РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ</h2>
-    <p><b>Пациент:</b> {patient_fio}, {patient_age} лет</p>
-    <hr>
-    <pre style="white-space: pre-wrap; font-family: Arial; font-size: 12px;">{res}</pre>
-    </body>
-    </html>
-    """
-    
-    pisa.CreatePDF(html_template, dest=pdf_buffer, encoding='utf-8')
-    
-    st.download_button(
-    label="📄 Скачать Протокол .pdf",
-    data=pdf_buffer.getvalue(),
-    file_name=f"Expert_{patient_fio}.pdf",
-    mime="application/pdf"
-    )
+       expert = NeuroExpertMaster(matrix)
+        gen_mark = 'ж' if p_gen == "ж" else 'м'
+        full_code = f"{p_type}{gen_mark}/{''.join(map(str, scores))}"
+        
+        # Запуск твоего RUN
+        res = expert.run(full_code, ",".join(presets), ",".join(selected_tags))
+        
+        st.markdown("### Итоговый протокол:")
+        st.text_area("", res, height=450)
+        
+        # --- БЛОК ВОРД ---
+        doc_io = io.BytesIO()
+        doc = Document()
+        doc.add_paragraph(f"РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ: {patient_fio}")
+        doc.add_paragraph(res)
+        doc.save(doc_io)
+        st.download_button("📥 Скачать .docx", doc_io.getvalue(), f"{patient_fio}.docx")
+        
+        # --- БЛОК PDF (xhtml2pdf) ---
+        from xhtml2pdf import pisa
+        pdf_buffer = io.BytesIO()
+        html_template = f"<html><body><h2>{patient_fio}</h2><pre>{res}</pre></body></html>"
+        pisa.CreatePDF(html_template, dest=pdf_buffer, encoding='utf-8')
+        st.download_button("📄 Скачать .pdf", pdf_buffer.getvalue(), f"{patient_fio}.pdf")
