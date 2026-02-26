@@ -82,7 +82,7 @@ class NeuroExpertMaster:
                 st_raw.append(p_data.get("status", ""))
             for t in tags:
                 if t != "па": st_raw.append(self.lib.get("tags", {}).get(t, ""))
-            if not is_norm_logic and self.rv: st_raw.append(self.rv.get(typ_key, self.rv.get("0", "")))
+            if not is_norm_logic and self.sr: st_raw.append(self.sr.get(typ_key, self.sr.get("0", "")))
             # ВАЖНО: Берем именно суицидальный риск для статуса (ВСЕГДА)
             s_risk_lib = self.lib.get("suicide_risk", {})
             st_raw.append(s_risk_lib.get(typ_key, s_risk_lib.get("0", "")))
