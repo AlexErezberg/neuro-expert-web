@@ -3,6 +3,7 @@ import json
 import random
 from docx import Document
 import io
+from fpdf import FPDF
 
 # 1. ТВОЙ СВЯЩЕННЫЙ КЛАСС (Вставь сюда СВОЙ код полностью)
 # Я ставлю заглушку, замени её своим NeuroExpertMaster со всеми методами!
@@ -77,3 +78,25 @@ if st.button("СГЕНЕРИРОВАТЬ"):
     # Скачивание Word
     word_data = expert.save_to_word(res)
     st.download_button("📥 Скачать .docx", word_data, "Expert_Report.docx")
+
+# ГЕНЕРАЦИЯ PDF
+    pdf = FPDF()
+    pdf.add_page()
+    # Чтобы не возиться со шрифтами в облаке, используем Unicode-совместимый подход
+    pdf.add_font('DejaVu', '', 'https://github.com', uni=True)
+    pdf.set_font('DejaVu', '', 12)
+    
+    pdf.cell(200, 10, txt="ЗАКЛЮЧЕНИЕ ПСИХОЛОГА", ln=1, align='C')
+    pdf.ln(10)
+    
+    # Печатаем текст построчно
+    for line in res.split('\n'):
+        pdf.multi_cell(0, 10, txt=line)
+    
+    pdf_output = pdf.output(dest='S')
+    st.download_button(
+        label="📄 Скачать Протокол .pdf",
+        data=pdf_output,
+        file_name=f"Expert_{patient_fio}.pdf",
+        mime="application/pdf"
+    )
