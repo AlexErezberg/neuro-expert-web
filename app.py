@@ -5,7 +5,7 @@ import random
 from docx import Document
 
 class NeuroExpertMaster:
-    def __init__(self, path):
+    def __init__(self, matrix_data):
         try:
             with open(path, 'r', encoding='utf-8-sig') as f:
                 self.lib = json.loads(f.read().strip('\ufeff'))
@@ -159,70 +159,60 @@ class NeuroExpertMaster:
                 final.append(self.apply_gender(risk_opts, gen, is_endo))
 
             return f"СТАТУС:\n{status_text}\n\nРЕЗУЛЬТАТЫ:\n{' '.join(f_res)}\n\nЗАКЛЮЧЕНИЕ:\n" + "\n\n".join([p.strip() for p in final if p.strip()])
-        except Exception: return traceback.format_exc()
+            return final_res
 
-# --- 1. ЗАГЛУШКА ДВИЖКА (ПОКА НЕ ТРОГАЕМ, ЖДЕМ КОМАНДЫ) ---
-class NeuroExpertMaster:
-    def __init__(self, matrix): self.lib = matrix
-    def run(self, code, adj, tags): return f"ДВИЖОК ГОТОВ. ШИФР: {code}\nНАДСТРОЙКИ: {adj}\nТЕГИ: {tags}"
-    def save_to_word(self, text, fio):
-        doc = Document(); doc.add_paragraph(text); bio = io.BytesIO()
-        doc.save(bio); return bio.getvalue()
+        except Exception: 
+            return traceback.format_exc()
 
-# --- 2. НАСТРОЙКИ ИНТЕРФЕЙСА (АНИМАЦИЯ И ФОН) ---
-st.set_page_config(page_title="NeuroExpert Web", page_icon="🧠", layout="wide")
-st.markdown("""
-    <style>
-    .main { background-color: #0e1117; color: #ffffff; }
-    .stSlider { margin-bottom: 20px; }
-    .stButton>button { width: 100%; border-radius: 10px; height: 3em; background-color: #2e6bef; color: white; }
-    </style>
-    """, unsafe_allow_html=True)
+# Загрузка JSON-аккумулятора
+@st.cache_data
+def load_matrix():
+    with open('expert_matrix.json', 'r', encoding='utf-8-sig') as f:
+        return json.load(f)
 
-# --- 3. ДАННЫЕ (СПИСКИ) ---
-PROFILES = ["0*", "0+", "00", "0т", "0-", "0сон", "7", "8", "9", "9гэ", "0000", "0", "1", "2", "3", "4", "5"]
-ADJUSTMENTS = ["н", "праврег", "леврег", "Асенс", "Аэф", "Ааф", "Аак", "Асем", "неглект", "Апрдин", "Апркин", "Апркон", "АгнП", "АгнЛ", "Апат", "ДЭП", "МСА", "МКАС", "ТАЛАМ", "РЕТИК", "СТРИАР", "МПС", "Дгор", "Дсом", "Дког", "Дтр", "Дгорсом"]
-TAGS = ["параноид", "манерный", "аутист", "алко", "люся", "психопат", "диализ", "афазия_сенс", "номина", "па", "пид"]
-FUNCTIONS = ["1. Внимание", "2. Зрит.пред.гнозис", "3. Простран.гнозис", "4. Динам. праксис", "5. Кинестет. праксис", "6. Конструктив. праксис", "7. Счет", "8. Речь", "9. Память", "10. Мышление"]
+matrix = load_matrix()
 
-# --- 4. ОБОЛОЧКА ---
-st.title("🧠 NeuroExpert: Коннектом-Интерфейс")
+# Оболочка
+st.set_page_config(page_title="NeuroExpert Web", layout="wide")
+st.title("🧠 NeuroExpert Master Engine")
 
 with st.sidebar:
     st.header("📋 Паспорт")
     fio = st.text_input("ФИО", "Иванов И.И.")
-    age = st.number_input("Возраст", 1, 110, 65)
-    gender = st.radio("Пол", ["м", "ж"], horizontal=True)
-    st.markdown("---")
-    st.subheader("💎 Профиль")
-    p_type = st.selectbox("Шифр типа", PROFILES)
-    st.markdown("---")
-    st.info("v66.8 | Mobile Ready")
+    p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"])
+    p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
-# ПОЛЗУНКИ (В 2 колонки для смартфона)
-st.subheader("📊 Функциональный статус (0-5)")
+st.subheader("📊 Функции (0-5)")
+f_names = ["Внимание", "Зрит.Гнозис", "Простр.Гнозис", "Дин.Праксис", "Кин.Праксис", "Констр.Праксис", "Счет", "Речь", "Память", "Мышление"]
 scores = []
-cols = st.columns(2)
-for i, name in enumerate(FUNCTIONS):
-    with cols[i % 2]:
-        scores.append(st.select_slider(name, options=[0, 1, 2, 3, 4, 5], value=0))
+cols = st.columns(5)
+for i, name in enumerate(f_names):
+    with cols[i % 5]:
+        scores.append(st.slider(name, 0, 5, 0))
 
-# НАДСТРОЙКИ И ТЕГИ
-st.markdown("---")
-sel_adj = st.multiselect("🛠 Надстройки (Сбои и Афазии)", ADJUSTMENTS)
-sel_tags = st.multiselect("🏷 Теги (Маркеры)", TAGS)
+# Выпадающие списки из ТВОЕГО JSON
+adj_keys = list(matrix.get("phenomenology_adjustments", {}).keys())
+presets = st.multiselect("🛠 Надстройки", adj_keys)
+tag_keys = list(matrix.get("tags", {}).keys())
+selected_tags = st.multiselect("🏷 Теги", tag_keys)
 
-# ФИНАЛЬНЫЙ КОД
-full_code = f"{p_type}{gender}/{''.join(map(str, scores))}"
-st.code(f"Актуальный шифр: {full_code}", language="text")
-
+# ЗАПУСК ЭНДЖИНА
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
-    # Тут будет вызов твоего Умного Движка
-    expert = NeuroExpertMaster({})
-    res = expert.run(full_code, ",".join(sel_adj), ",".join(sel_tags))
+    full_code = f"{p_type}{p_gen}/{''.join(map(str, scores))}"
     
-    st.markdown("### Итоговое заключение:")
-    st.text_area("", res, height=300)
+    # Создаем объект энджина прямо здесь
+    engine = NeuroExpertMaster(matrix)
     
-    word_data = expert.save_to_word(res, fio)
-    st.download_button("📥 Скачать .docx", word_data, f"{fio}.docx")
+    # Прогоняем через RUN
+    report = engine.run(full_code, ",".join(presets), ",".join(selected_tags))
+    
+    st.markdown("### Итоговый текст:")
+    st.text_area("", report, height=500)
+    
+    # ВОРД-ПРИНТЕР
+    doc = Document()
+    doc.add_paragraph(f"ПРОТОКОЛ: {fio}")
+    doc.add_paragraph(report)
+    bio = io.BytesIO()
+    doc.save(bio)
+    st.download_button("📥 Скачать .docx", bio.getvalue(), f"{fio}.docx")
