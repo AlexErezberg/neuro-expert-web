@@ -79,27 +79,29 @@ if st.button("СГЕНЕРИРОВАТЬ"):
     word_data = expert.save_to_word(res)
     st.download_button("📥 Скачать .docx", word_data, "Expert_Report.docx")
 
-# НОВЫЙ БЕЗОПАСНЫЙ PDF (fpdf2 style)
-    pdf = FPDF()
-    pdf.add_page()
-    # Используем стандартный шрифт, который поддерживает Unicode
-    pdf.set_font("Arial", size=12) 
+from xhtml2pdf import pisa
+
+# Внутри блока кнопки "СГЕНЕРИРОВАТЬ"
+    # ГЕНЕРАЦИЯ PDF ЧЕРЕЗ HTML (Стерильно для кириллицы)
+    pdf_buffer = io.BytesIO()
+    # Создаем простой HTML-шаблон с поддержкой UTF-8
+    html_template = f"""
+    <html>
+    <head><meta charset="UTF-8"></head>
+    <body style="font-family: Arial, sans-serif;">
+        <h2 style="text-align: center;">РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ</h2>
+        <p><b>Пациент:</b> {patient_fio}, {patient_age} лет</p>
+        <hr>
+        <pre style="white-space: pre-wrap; font-family: Arial; font-size: 12px;">{res}</pre>
+    </body>
+    </html>
+    """
     
-    # Заголовок (пишем через метод multi_cell для надежности)
-    pdf.multi_cell(0, 10, txt="РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ", align='C')
-    pdf.ln(5)
-    pdf.multi_cell(0, 10, txt=f"Пациент: {patient_fio}, {patient_age} лет")
-    pdf.ln(5)
-    
-    # Основной текст
-    pdf.multi_cell(0, 10, txt=res)
-    
-    # Выхлоп в память
-    pdf_output = pdf.output() 
+    pisa.CreatePDF(html_template, dest=pdf_buffer, encoding='utf-8')
     
     st.download_button(
         label="📄 Скачать Протокол .pdf",
-        data=bytes(pdf_output),
+        data=pdf_buffer.getvalue(),
         file_name=f"Expert_{patient_fio}.pdf",
         mime="application/pdf"
     )
