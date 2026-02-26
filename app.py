@@ -187,6 +187,15 @@ matrix = load_matrix()
 # Оболочка
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 st.title("🧠 NeuroExpert Master Engine")
+def reset_app():
+    # Очищаем все ключи в памяти сессии
+    for key in st.session_state.keys():
+        del st.session_state[key]
+    st.rerun() # Перезапускаем приложение чистым
+
+# Кнопка сброса в сайдбаре (самая верхняя)
+if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
+    reset_app()
 
 with st.sidebar:
     st.header("📋 Паспорт")
