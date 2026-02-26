@@ -79,24 +79,27 @@ if st.button("СГЕНЕРИРОВАТЬ"):
     word_data = expert.save_to_word(res)
     st.download_button("📥 Скачать .docx", word_data, "Expert_Report.docx")
 
-# ГЕНЕРАЦИЯ PDF
+# НОВЫЙ БЕЗОПАСНЫЙ PDF (fpdf2 style)
     pdf = FPDF()
     pdf.add_page()
-    # Чтобы не возиться со шрифтами в облаке, используем Unicode-совместимый подход
-    pdf.add_font('DejaVu', '', 'https://github.com', uni=True)
-    pdf.set_font('DejaVu', '', 12)
+    # Используем стандартный шрифт, который поддерживает Unicode
+    pdf.set_font("Arial", size=12) 
     
-    pdf.cell(200, 10, txt="ЗАКЛЮЧЕНИЕ ПСИХОЛОГА", ln=1, align='C')
-    pdf.ln(10)
+    # Заголовок (пишем через метод multi_cell для надежности)
+    pdf.multi_cell(0, 10, txt="РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ", align='C')
+    pdf.ln(5)
+    pdf.multi_cell(0, 10, txt=f"Пациент: {patient_fio}, {patient_age} лет")
+    pdf.ln(5)
     
-    # Печатаем текст построчно
-    for line in res.split('\n'):
-        pdf.multi_cell(0, 10, txt=line)
+    # Основной текст
+    pdf.multi_cell(0, 10, txt=res)
     
-    pdf_output = pdf.output(dest='S')
+    # Выхлоп в память
+    pdf_output = pdf.output() 
+    
     st.download_button(
         label="📄 Скачать Протокол .pdf",
-        data=pdf_output,
+        data=bytes(pdf_output),
         file_name=f"Expert_{patient_fio}.pdf",
         mime="application/pdf"
     )
