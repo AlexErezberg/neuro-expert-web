@@ -3,6 +3,7 @@ import json
 import random
 import io
 from docx import Document
+from fpdf import FPDF
 
 # --- 1. ТВОЙ СВЯЩЕННЫЙ КЛАСС (ВСТАВЬ СЮДА СВОЙ NeuroExpertMaster ЦЕЛИКОМ) ---
 class NeuroExpertMaster:
@@ -20,6 +21,19 @@ class NeuroExpertMaster:
         bio = io.BytesIO()
         doc.save(bio)
         return bio.getvalue()
+    def save_to_pdf(self, text):
+        from fpdf import FPDF
+        pdf = FPDF()
+        pdf.add_page()
+        # Тянем шрифт из сети, чтобы не было ошибок кодировки
+        pdf.add_font("DejaVu", "", "https://github.com")
+        pdf.set_font("DejaVu", size=12)
+        
+        # Обработка текста, чтобы не вылетало на переносах
+        for line in text.split('\n'):
+            pdf.multi_cell(0, 10, txt=line)
+            
+        return pdf.output() 
 
 # --- 2. ЗАГРУЗКА ---
 @st.cache_data
