@@ -200,7 +200,11 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 with st.sidebar:
     st.header("📋 Паспорт")
     fio = st.sidebar.text_input("ФИО", "Иванов И.И.", key="fio_input")
-    p_type = st.sidebar.selectbox("Тип", PROFILES, key="profile_select")
+    p_type = st.sidebar.selectbox(
+    "Тип", 
+    ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], 
+    key="profile_select"
+)
     p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
 st.subheader("📊 Функции (0-5)")
