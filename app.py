@@ -89,10 +89,10 @@ from xhtml2pdf import pisa
     <html>
     <head><meta charset="UTF-8"></head>
     <body style="font-family: Arial, sans-serif;">
-        <h2 style="text-align: center;">РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ</h2>
-        <p><b>Пациент:</b> {patient_fio}, {patient_age} лет</p>
-        <hr>
-        <pre style="white-space: pre-wrap; font-family: Arial; font-size: 12px;">{res}</pre>
+    <h2 style="text-align: center;">РЕЗУЛЬТАТЫ ОБСЛЕДОВАНИЯ</h2>
+    <p><b>Пациент:</b> {patient_fio}, {patient_age} лет</p>
+    <hr>
+    <pre style="white-space: pre-wrap; font-family: Arial; font-size: 12px;">{res}</pre>
     </body>
     </html>
     """
@@ -100,8 +100,8 @@ from xhtml2pdf import pisa
     pisa.CreatePDF(html_template, dest=pdf_buffer, encoding='utf-8')
     
     st.download_button(
-        label="📄 Скачать Протокол .pdf",
-        data=pdf_buffer.getvalue(),
-        file_name=f"Expert_{patient_fio}.pdf",
-        mime="application/pdf"
+    label="📄 Скачать Протокол .pdf",
+    data=pdf_buffer.getvalue(),
+    file_name=f"Expert_{patient_fio}.pdf",
+    mime="application/pdf"
     )
