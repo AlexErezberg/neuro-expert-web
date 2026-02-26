@@ -184,6 +184,8 @@ def load_matrix():
 
 matrix = load_matrix()
 
+st.set_page_config(page_title="NeuroExpert Web", layout="wide")
+
 st.markdown("""
     <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 20px; border-radius: 15px; border-left: 5px solid #2e6bef; margin-bottom: 25px;">
         <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
