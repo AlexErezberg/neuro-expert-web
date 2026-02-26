@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 import io
+import random
 from docx import Document
 
 # --- 1. ЗАГЛУШКА ДВИЖКА (ПОКА НЕ ТРОГАЕМ, ЖДЕМ КОМАНДЫ) ---
