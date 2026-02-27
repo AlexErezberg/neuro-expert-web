@@ -233,6 +233,24 @@ with st.sidebar:
     except:
         pass
 
+# --- 1. СЕКРЕТНЫЙ ЗАМОК (Вживлять СЮДА) ---
+PASSWORD = "твой_код_здесь" # <--- ЗАМЕНИ НА СВОЙ ПАРОЛЬ!
+
+if "auth" not in st.session_state:
+    st.session_state["auth"] = False
+
+if not st.session_state["auth"]:
+    # Показываем только поле ввода пароля (красное, в тон системе)
+    pwd_col1, pwd_col2 = st.columns([1, 2])
+    with pwd_col1:
+        pwd_input = st.text_input("🔑 Доступ к системе:", type="password")
+        if pwd_input == PASSWORD:
+            st.session_state["auth"] = True
+            st.rerun()
+        elif pwd_input:
+            st.error("❌ Отказано")
+    st.stop() # ОСТАНАВЛИВАЕМ всё остальное!
+
 # --- 2. ЛЕВАЯ ПАНЕЛЬ (САЙДБАР) ---
 with st.sidebar:
     # Твои колонки для мозгов
