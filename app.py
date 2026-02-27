@@ -224,7 +224,7 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 with st.sidebar:
 # ПРИШПАНДОРИВАЕМ МОЗГИ (Если залил на Гитхаб)
     try:
-        st.image("brain2.jpg", use_container_width=True)
+        st.image("brain3.jpg", use_container_width=True)
     except:
         pass # Если картинки еще нет, просто пропустит
     st.header("📋 Паспорт")
