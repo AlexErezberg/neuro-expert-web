@@ -233,7 +233,7 @@ with st.sidebar:
     with c2:
         # --- 2. ТЕПЕРЬ ТВОЙ ТРАЙ ВНУТРИ КОЛОНКИ ---
         try:
-            st.image("brain2.jpg", width=80, use_container_width=True)
+            st.image("brain2.jpg", width=80)
         except:
             st.write("🧠") # Если картинки нет, покажет эмодзи
     st.header("📋 Паспорт")
