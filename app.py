@@ -186,42 +186,40 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ГРАДИЕНТНЫЙ МОНОЛИТ ---
+# --- 1. ПЛОТНОСТЬ (CSS) ---
 st.markdown("""
-    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-                padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
-                margin-bottom: 20px; position: relative;">
-        <!-- Место под картинку и текст забронировано -->
-    </div>
+    <style>
+    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
+    .block-container { padding-top: 1.5rem !important; }
+    </style>
 """, unsafe_allow_html=True)
 
-# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (СШИВКА НА ОДНОМ УРОВНЕ) ---
-# Поднимаем элементы ВНУТРЬ градиента через отрицательный отступ
-st.markdown('<div style="margin-top: -105px; margin-left: 15px; display: flex; align-items: center; gap: 12px; position: relative; z-index: 10;">', unsafe_allow_html=True)
-
-# Рисуем мозг и текст в одной строке (flex-box)
-col_left, col_right = st.columns([0.8, 10])
-
-with col_left:
-    try: st.image("brain3.jpg", width=55)
-    except: st.write("🧠")
-
-with col_right:
-    # Текст NeuroExpert теперь ПЛОТНО и НА ОДНОМ УРОВНЕ с картинкой
-    st.markdown("""
-        <div style="margin-top: 5px;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
+# --- 2. МОНОЛИТНАЯ ШАПКА (ВСЁ ВНУТРИ ОДНОГО БЛОКА) ---
+st.markdown(f"""
+    <div style="
+        background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+        padding: 20px; 
+        border-radius: 15px; 
+        border-left: 5px solid #FF4B4B; 
+        display: flex; 
+        align-items: center; 
+        gap: 20px;
+        margin-bottom: 25px;
+    ">
+        <img src="https://raw.githubusercontent.com" 
+             style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+        <div>
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1;">
                 <span style="color: #FF4B4B;">Neuro</span>Expert
             </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em; line-height: 1.1;">
+            <p style="color: #808495; font-style: italic; margin: 0; font-size: 0.95em;">
                 Комплексная система синдромального нейропсихологического анализа
             </p>
         </div>
-    """, unsafe_allow_html=True)
+    </div>
+""", unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
-
-# --- 3. ГАЙД (AppGuide.pdf) — В САЙДБАР (ЧТОБЫ НЕ ЛОМАЛ ШАПКУ) ---
+# --- 3. ГАЙД В САЙДБАРЕ (ЧТОБЫ НЕ ЛОМАЛ ЦЕНТР) ---
 with st.sidebar:
     st.markdown("---")
     try:
