@@ -186,26 +186,37 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ТА САМАЯ УСУШКА (CSS-ДИЕТА) ---
+# --- 1. ШАПКА: ГРАДИЕНТ, ЛОГО И КОМПАКТНОСТЬ ---
 st.markdown("""
     <style>
-    /* Сжимаем интервалы ползунков в центре */
-    .stSlider { margin-bottom: -20px; padding-top: 0px; }
-    
-    /* Уплотняем элементы в Сайдбаре */
-    [data-testid="stSidebar"] .stMarkdown, 
-    [data-testid="stSidebar"] .stTextInput, 
-    [data-testid="stSidebar"] .stNumberInput, 
-    [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stMultiSelect {
-        margin-bottom: -15px;
-    }
-    
-    /* Убираем пустое место в самом верху страницы */
-    .block-container { padding-top: 1rem; }
+    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
+    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] .stTextInput, 
+    [data-testid="stSidebar"] .stNumberInput, [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stMultiSelect { margin-bottom: -15px !important; }
+    .block-container { padding-top: 1rem !important; }
     </style>
 """, unsafe_allow_html=True)
 
+col_logo, col_text = st.columns([0.5, 10])
+
+with col_logo:
+    try:
+        st.image("brain3.jpg", width=30)
+    except:
+        st.write("🧠")
+
+with col_text:
+    st.markdown("""
+        <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; margin-left: -20px;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
+                <span style="color: #FF4B4B;">Neuro</span>Expert
+            </h1>
+            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em;">
+                Комплексная система синдромального нейропсихологического анализа
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+    
 # --- 1. ФУНКЦИЯ СБРОСА (Оставляем как есть) ---
 def reset_app():
     if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
