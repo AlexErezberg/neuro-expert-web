@@ -186,6 +186,26 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
+# --- 1. ТА САМАЯ УСУШКА (CSS-ДИЕТА) ---
+st.markdown("""
+    <style>
+    /* Сжимаем интервалы ползунков в центре */
+    .stSlider { margin-bottom: -20px; padding-top: 0px; }
+    
+    /* Уплотняем элементы в Сайдбаре */
+    [data-testid="stSidebar"] .stMarkdown, 
+    [data-testid="stSidebar"] .stTextInput, 
+    [data-testid="stSidebar"] .stNumberInput, 
+    [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stMultiSelect {
+        margin-bottom: -15px;
+    }
+    
+    /* Убираем пустое место в самом верху страницы */
+    .block-container { padding-top: 1rem; }
+    </style>
+""", unsafe_allow_html=True)
+
 # --- 1. ТВОЙ КУСОК (ПЕРЕДЕЛАННЫЙ ПОД МИКРО-ЛОГО И КРАСНЫЙ ЦВЕТ) ---
 col_logo, col_text = st.columns([0.5, 10]) 
 
