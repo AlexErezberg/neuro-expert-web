@@ -186,40 +186,44 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ПЛОТНОСТЬ (CSS) ---
+# --- 1. ШАПКА: ГРАДИЕНТНЫЙ ФОН (ПОДЛОЖКА) ---
 st.markdown("""
-    <style>
-    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
-    .block-container { padding-top: 1.5rem !important; }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- 2. МОНОЛИТНАЯ ШАПКА (ВСЁ ВНУТРИ ОДНОГО БЛОКА) ---
-st.markdown(f"""
-    <div style="
-        background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-        padding: 20px; 
-        border-radius: 15px; 
-        border-left: 5px solid #FF4B4B; 
-        display: flex; 
-        align-items: center; 
-        gap: 20px;
-        margin-bottom: 25px;
-    ">
-        <img src="https://raw.githubusercontent.com" 
-             style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
-        <div>
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1;">
-                <span style="color: #FF4B4B;">Neuro</span>Expert
-            </h1>
-            <p style="color: #808495; font-style: italic; margin: 0; font-size: 0.95em;">
-                Комплексная система синдромального нейропсихологического анализа
-            </p>
-        </div>
+    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+                padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
+                margin-bottom: 25px; height: 100px;">
     </div>
 """, unsafe_allow_html=True)
 
-# --- 3. ГАЙД В САЙДБАРЕ (ЧТОБЫ НЕ ЛОМАЛ ЦЕНТР) ---
+# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (ПОДНИМАЕМ ВВЕРХ НА ФОН) ---
+# Отрицательный margin-top затянет всё внутрь градиента
+st.markdown('<div style="margin-top: -115px; padding-left: 15px;">', unsafe_allow_html=True)
+
+# ОДНА СТРОКА КОЛОНОК (0.7 к 10) — МОЗГ И ТЕКСТ В ОДИН РЯД
+c_img, c_txt = st.columns([0.7, 10])
+
+with c_img:
+    try:
+        # Твой brain3.jpg — БЕЗ ВНЕШНИХ ССЫЛОК!
+        st.image("brain3.jpg", width=60)
+    except:
+        st.write("🧠")
+
+with c_txt:
+    # Текст NeuroExpert теперь ПЛОТНО И РОВНО рядом с мозгом
+    st.markdown("""
+        <div style="margin-top: 5px;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1;">
+                <span style="color: #FF4B4B;">Neuro</span>Expert
+            </h1>
+            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.95em;">
+                Комплексная система синдромального нейропсихологического анализа
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+st.markdown('</div><br>', unsafe_allow_html=True)
+
+# --- 3. ГАЙД (AppGuide.pdf) — УХОДИТ В САЙДБАР (НЕ ЛОМАЕТ ШАПКУ) ---
 with st.sidebar:
     st.markdown("---")
     try:
