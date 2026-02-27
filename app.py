@@ -186,22 +186,25 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ТВОЯ ПИКЧА + ТВОЙ ТЕКСТ ---
-# Создаем две колонки: узкую для лого и широкую для текста
-col_logo, col_text = st.columns([1, 4]) 
+# --- 1. ШАПКА: МИКРО-ЛОГО ВМЕСТО ЭМОДЗИ ---
+# Делаем первую колонку ОЧЕНЬ узкой ([0.5, 10])
+col_logo, col_text = st.columns([0.5, 10]) 
 
 with col_logo:
-    # Вставляем ТВОЮ картинку (убедись, что файл brain3.jpg в корне GitHub)
-    st.image("brain3.jpg", use_container_width=True)
+    # Твои мозги теперь МАЛЕНЬКИЕ (как иконка)
+    try:
+        st.image("brain3.jpg", width=50) # Прямо задаем ширину 50 пикселей!
+    except:
+        st.write("🧠")
 
 with col_text:
-    # Оставляем твой пафосный градиентный фон для текста
+    # Твой текст прижимается вплотную к микро-лого
     st.markdown("""
-        <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 15px; border-radius: 15px; border-left: 5px solid #2e6bef;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em;">
+        <div style="padding-top: 0px; margin-left: -20px;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
                 <span style="color: #2e6bef;">Neuro</span>Expert
             </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 5px; font-size: 1em;">
+            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em;">
                 Комплексная система синдромального нейропсихологического анализа
             </p>
         </div>
@@ -225,9 +228,12 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 with st.sidebar:
 # ПРИШПАНДОРИВАЕМ МОЗГИ (Если залил на Гитхаб)
     try:
-        st.image("brain2.jpg", use_container_width=True)
-    except:
-        pass # Если картинки еще нет, просто пропустит
+    c1, c2, c3 = st.columns([1, 2, 1]) # Бока по 1 части, центр - 2
+    with c2:
+        try:
+            st.image("brain2.jpg", use_container_width=True)
+        except:
+            pass
     st.header("📋 Паспорт")
     # Кнопка сброса (под заголовком Паспорт)
     
