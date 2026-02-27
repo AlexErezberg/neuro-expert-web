@@ -186,24 +186,32 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ГРАДИЕНТ, ЛОГО И КОМПАКТНОСТЬ ---
+# --- 1. ШАПКА: ГРАДИЕНТНЫЙ КОНТЕЙНЕР (ПОДЛОЖКА) ---
 st.markdown("""
-    <style>
-    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
-    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] .stTextInput, 
-    [data-testid="stSidebar"] .stNumberInput, [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stMultiSelect { margin-bottom: -15px !important; }
-    .block-container { padding-top: 1rem !important; }
-    </style>
+    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+                padding: 10px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
+                margin-bottom: 10px;">
+    </div>
 """, unsafe_allow_html=True)
 
-col_logo, col_text = st.columns([0.5, 10])
+# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (БЕЗ КОЛОНОК - ЧЕРЕЗ СТАНДАРТ) ---
+# Мы просто выводим их один за другим, Стримлит их склеит
+try:
+    # Твой brain3 максимально мелкий
+    st.image("brain3.jpg", width=50)
+except:
+    pass
 
-with col_logo:
-    try:
-        st.image("brain3.jpg", width=30)
-    except:
-        st.write("🧠")
+st.markdown(f"""
+    <div style="margin-top: -60px; margin-left: 60px;">
+        <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
+            <span style="color: #FF4B4B;">Neuro</span>Expert
+        </h1>
+        <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
+            Комплексная система синдромального нейропсихологического анализа 
+        </p>
+    </div>
+""", unsafe_allow_html=True)
 
 with col_text:
     st.markdown("""
