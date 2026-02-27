@@ -186,63 +186,45 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. МОНОЛИТНАЯ ШАПКА: ГРАДИЕНТ + brain3 + КРАСНЫЙ NEURO + ГАЙД ---
-# Сначала кнопка (мы её "притопим" в правый угол через CSS)
+# --- 1. ШАПКА: ГРАДИЕНТНАЯ ПОДЛОЖКА ---
 st.markdown("""
-    <style>
-    .stDownloadButton { position: absolute; right: 20px; top: 15px; z-index: 1000; }
-    .stDownloadButton > button { 
-        background-color: rgba(255, 75, 75, 0.1) !important; 
-        color: #FF4B4B !important; 
-        border: 1px solid #FF4B4B !important;
-        border-radius: 10px !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# Сам блок (Плита)
-st.markdown(f"""
-    <div style="
-        background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-        padding: 20px; 
-        border-radius: 15px; 
-        border-left: 5px solid #FF4B4B; 
-        display: flex; 
-        align-items: center; 
-        gap: 20px;
-        position: relative;
-        min-height: 80px;
-    ">
-        <img src="https://raw.githubusercontent.com" 
-             style="width: 55px; height: 55px; border-radius: 10px; object-fit: cover;">
-        <div style="flex-grow: 1;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
-                <span style="color: #FF4B4B;">Neuro</span>Expert
-            </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 5px; font-size: 0.9em; max-width: 80%;">
-                Комплексная система синдромального нейропсихологического анализа
-            </p>
-        </div>
+    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+                padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
+                margin-bottom: 20px; position: relative; min-height: 100px;">
     </div>
 """, unsafe_allow_html=True)
 
-# Кнопка Гайда (она "всплывет" поверх плиты в правом углу)
-try:
-    with open("manual.pdf", "rb") as f:
-        st.download_button("📚 ГАЙД", f, "NeuroExpert_Manual.pdf", "application/pdf")
-except:
-    pass
-    
-# --- 1. ФУНКЦИЯ СБРОСА (Оставляем как есть) ---
-def reset_app():
-    if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
-    if "age_input" in st.session_state: st.session_state["age_input"] = 65
-    if "profile_select" in st.session_state: st.session_state["profile_select"] = "0*"
-    for i in range(10):
-        if f"s_{i}" in st.session_state: st.session_state[f"s_{i}"] = 0
-    if "adj_ms" in st.session_state: st.session_state["adj_ms"] = []
-    if "tags_ms" in st.session_state: st.session_state["tags_ms"] = []
-    st.rerun()
+# --- 2. ВНУТРЯНКА: brain3, ТЕКСТ И ГАЙД (СВЕРХУ ПОДЛОЖКИ) ---
+# Поднимаем элементы вверх, чтобы они "легли" на градиент
+st.markdown('<div style="margin-top: -115px; padding-left: 15px; display: flex; align-items: center; gap: 15px;">', unsafe_allow_html=True)
+
+col_logo, col_txt, col_btn = st.columns([1, 8, 2])
+
+with col_logo:
+    try: st.image("brain3.jpg", width=55)
+    except: st.write("🧠")
+
+with col_txt:
+    st.markdown("""
+        <div style="margin-top: 5px;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
+                <span style="color: #FF4B4B;">Neuro</span>Expert
+            </h1>
+            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
+                Комплексная система синдромального нейропсихологического анализа
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+with col_btn:
+    # ТВОЙ ГАЙД (AppGuide.pdf) В ПРАВОМ ВЕРХНЕМ УГЛУ
+    try:
+        with open("AppGuide.pdf", "rb") as f:
+            st.download_button("📚 ГАЙД", f, "NeuroExpert_Guide.pdf", "application/pdf")
+    except:
+        st.write("🚫") # Если файла нет
+
+st.markdown('</div><br>', unsafe_allow_html=True)
 
 # --- 2. ЛЕВАЯ ПАНЕЛЬ (САЙДБАР) ---
 with st.sidebar:
