@@ -202,7 +202,7 @@ with col_text:
     st.markdown("""
         <div style="padding-top: 0px; margin-left: -20px;">
             <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
-                <span style="color: #2e6bef;">Neuro</span>Expert
+                <span style="color: #FF4B4B;">Neuro</span>Expert
             </h1>
             <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em;">
                 Комплексная система синдромального нейропсихологического анализа
@@ -233,7 +233,7 @@ with st.sidebar:
     with c2:
         # --- 2. ТЕПЕРЬ ТВОЙ ТРАЙ ВНУТРИ КОЛОНКИ ---
         try:
-            st.image("brain2.jpg", use_container_width=True)
+            st.image("brain2.jpg", width=80, use_container_width=True)
         except:
             st.write("🧠") # Если картинки нет, покажет эмодзи
     st.header("📋 Паспорт")
