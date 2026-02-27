@@ -229,7 +229,7 @@ with st.sidebar:
     st.markdown("---")
     try:
         with open("AppGuide.pdf", "rb") as f:
-            st.download_button("📚 СКАЧАТЬ ГАЙД (PDF)", f, "NeuroExpert_Guide.pdf", "application/pdf")
+            st.download_button("📚 СКАЧАТЬ PDF", f, "NeuroExpert_Guide.pdf", "application/pdf")
     except:
         pass
 
