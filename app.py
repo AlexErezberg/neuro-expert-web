@@ -209,6 +209,7 @@ st.markdown("""
 # --- 1. ФУНКЦИЯ СБРОСА (Вставлять СЮДА) ---
 def reset_app():
     if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
+    if "age_input" in st.session_state: st.session_state["age_input"] = 65
     if "profile_select" in st.session_state: st.session_state["profile_select"] = "0*"
     for i in range(10):
         if f"s_{i}" in st.session_state: st.session_state[f"s_{i}"] = 0
@@ -221,10 +222,16 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
     reset_app()
 
 with st.sidebar:
+# ПРИШПАНДОРИВАЕМ МОЗГИ (Если залил на Гитхаб)
+    try:
+        st.image("brain1.jpg", use_container_width=True)
+    except:
+        pass # Если картинки еще нет, просто пропустит
     st.header("📋 Паспорт")
     # Кнопка сброса (под заголовком Паспорт)
     
     fio = st.text_input("ФИО", "Иванов И.И.", key="fio_input")
+    age = st.number_input("Возраст", 1, 110, 65, key="age_input")
     p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], key="profile_select")
     p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
 
