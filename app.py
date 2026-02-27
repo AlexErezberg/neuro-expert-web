@@ -186,31 +186,32 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ГРАДИЕНТНЫЙ КОНТЕЙНЕР (ПОДЛОЖКА) ---
+# --- 1. ТВОЙ ГРАДИЕНТНЫЙ БЛОК (ПОДЛОЖКА) ---
 st.markdown("""
     <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
                 padding: 10px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
-                margin-bottom: 10px;">
+                margin-bottom: 20px;">
     </div>
 """, unsafe_allow_html=True)
 
-# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (БЕЗ КОЛОНОК - ЧЕРЕЗ СТАНДАРТ) ---
-# Мы просто выводим их один за другим, Стримлит их склеит
+# --- 2. ВНУТРЯНКА: brain3 И ПОЛНОЕ НАЗВАНИЕ ---
 try:
-    # Твой brain3 максимально мелкий
+    # Твой микро-мозг (brain3)
     st.image("brain3.jpg", width=50)
 except:
-    pass
+    st.write("🧠")
 
-st.markdown(f"""
-    <div style="margin-top: -60px; margin-left: 60px;">
+# Текст "прыгает" вверх и вправо, название СТРОГО ПО ТВОЕМУ КАНОНУ
+st.markdown("""
+    <div style="margin-top: -65px; margin-left: 65px;">
         <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
             <span style="color: #FF4B4B;">Neuro</span>Expert
         </h1>
         <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
-            Комплексная система синдромального нейропсихологического анализа 
+            Комплексная система синдромального нейропсихологического анализа
         </p>
     </div>
+    <br>
 """, unsafe_allow_html=True)
 
 with col_text:
