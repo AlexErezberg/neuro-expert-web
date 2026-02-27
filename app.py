@@ -186,45 +186,49 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ГРАДИЕНТНАЯ ПОДЛОЖКА ---
+# --- 1. ШАПКА: ГРАДИЕНТНЫЙ МОНОЛИТ ---
 st.markdown("""
     <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
                 padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
-                margin-bottom: 20px; position: relative; min-height: 100px;">
+                margin-bottom: 20px; position: relative;">
+        <!-- Место под картинку и текст забронировано -->
     </div>
 """, unsafe_allow_html=True)
 
-# --- 2. ВНУТРЯНКА: brain3, ТЕКСТ И ГАЙД (СВЕРХУ ПОДЛОЖКИ) ---
-# Поднимаем элементы вверх, чтобы они "легли" на градиент
-st.markdown('<div style="margin-top: -115px; padding-left: 15px; display: flex; align-items: center; gap: 15px;">', unsafe_allow_html=True)
+# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (СШИВКА НА ОДНОМ УРОВНЕ) ---
+# Поднимаем элементы ВНУТРЬ градиента через отрицательный отступ
+st.markdown('<div style="margin-top: -105px; margin-left: 15px; display: flex; align-items: center; gap: 12px; position: relative; z-index: 10;">', unsafe_allow_html=True)
 
-col_logo, col_txt, col_btn = st.columns([1, 8, 2])
+# Рисуем мозг и текст в одной строке (flex-box)
+col_left, col_right = st.columns([0.8, 10])
 
-with col_logo:
+with col_left:
     try: st.image("brain3.jpg", width=55)
     except: st.write("🧠")
 
-with col_txt:
+with col_right:
+    # Текст NeuroExpert теперь ПЛОТНО и НА ОДНОМ УРОВНЕ с картинкой
     st.markdown("""
         <div style="margin-top: 5px;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
                 <span style="color: #FF4B4B;">Neuro</span>Expert
             </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
+            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em; line-height: 1.1;">
                 Комплексная система синдромального нейропсихологического анализа
             </p>
         </div>
     """, unsafe_allow_html=True)
 
-with col_btn:
-    # ТВОЙ ГАЙД (AppGuide.pdf) В ПРАВОМ ВЕРХНЕМ УГЛУ
+st.markdown('</div>', unsafe_allow_html=True)
+
+# --- 3. ГАЙД (AppGuide.pdf) — В САЙДБАР (ЧТОБЫ НЕ ЛОМАЛ ШАПКУ) ---
+with st.sidebar:
+    st.markdown("---")
     try:
         with open("AppGuide.pdf", "rb") as f:
-            st.download_button("📚 ГАЙД", f, "NeuroExpert_Guide.pdf", "application/pdf")
+            st.download_button("📚 СКАЧАТЬ ГАЙД (PDF)", f, "NeuroExpert_Guide.pdf", "application/pdf")
     except:
-        st.write("🚫") # Если файла нет
-
-st.markdown('</div><br>', unsafe_allow_html=True)
+        pass
 
 # --- 2. ЛЕВАЯ ПАНЕЛЬ (САЙДБАР) ---
 with st.sidebar:
