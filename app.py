@@ -186,41 +186,62 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ПЛОТНОСТЬ (CSS-ДИЕТА) ---
+# --- 1. ШАПКА: ГРАДИЕНТ, ЛОГО И ВШИТЫЙ ГАЙД ---
 st.markdown("""
     <style>
-    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
-    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] .stTextInput, 
-    [data-testid="stSidebar"] .stNumberInput, [data-testid="stSidebar"] .stSelectbox,
-    [data-testid="stSidebar"] .stMultiSelect { margin-bottom: -15px !important; }
-    .block-container { padding-top: 1rem !important; }
+    /* Стиль для кнопки гайда внутри блока */
+    .stDownloadButton > button {
+        background-color: transparent !important;
+        color: #808495 !important;
+        border: 1px solid #3d404a !important;
+        font-size: 0.8em !important;
+        padding: 0.2rem 0.5rem !important;
+    }
+    .stDownloadButton > button:hover {
+        color: #FF4B4B !important;
+        border-color: #FF4B4B !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 2. ШАПКА (МОНОЛИТ: ПОДЛОЖКА + brain3 + ТЕКСТ) ---
-st.markdown("""
-    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-                padding: 10px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
-                margin-bottom: 20px;">
-    </div>
-""", unsafe_allow_html=True)
+# Отрисовка блока
+col_main, col_btn = st.columns([9, 1])
 
-try:
-    st.image("brain3.jpg", width=50)
-except:
-    st.write("🧠")
+with col_main:
+    st.markdown("""
+        <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+                    padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
+                    margin-bottom: 20px; position: relative;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img src="https://raw.githubusercontent.com" style="display:none;"> <!-- Костыль для шрифта если надо -->
+                <div style="width: 50px; height: 50px;">
+    """, unsafe_allow_html=True)
+    
+    # Вставляем brain3 внутри HTML через колонку (единственный надежный способ в Streamlit)
+    c_img, c_txt = st.columns([0.6, 10])
+    with c_img:
+        try: st.image("brain3.jpg", width=50)
+        except: st.write("🧠")
+    with c_txt:
+        st.markdown("""
+            <div style="margin-left: -15px;">
+                <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
+                    <span style="color: #FF4B4B;">Neuro</span>Expert
+                </h1>
+                <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
+                    Комплексная система синдромального нейропсихологического анализа
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+    st.markdown("</div></div>", unsafe_allow_html=True)
 
-st.markdown("""
-    <div style="margin-top: -65px; margin-left: 65px;">
-        <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
-            <span style="color: #FF4B4B;">Neuro</span>Expert
-        </h1>
-        <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.85em;">
-            Комплексная система синдромального нейропсихологического анализа
-        </p>
-    </div>
-    <br>
-""", unsafe_allow_html=True)
+# Кнопка Гайда в правой части той же линии
+with col_btn:
+    try:
+        with open("manual.pdf", "rb") as f:
+            st.download_button("📚", f, "AppGuide.pdf", "application/pdf", help="Методический Гайд")
+    except:
+        pass
     
 # --- 1. ФУНКЦИЯ СБРОСА (Оставляем как есть) ---
 def reset_app():
