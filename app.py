@@ -186,44 +186,45 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ШАПКА: ГРАДИЕНТНЫЙ ФОН (ПОДЛОЖКА) ---
-st.markdown("""
-    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-                padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
-                margin-bottom: 25px; height: 100px;">
-    </div>
-""", unsafe_allow_html=True)
+import base64
 
-# --- 2. ВНУТРЯНКА: МОЗГ И ТЕКСТ (ПОДНИМАЕМ ВВЕРХ НА ФОН) ---
-# Отрицательный margin-top затянет всё внутрь градиента
-st.markdown('<div style="margin-top: -115px; padding-left: 15px;">', unsafe_allow_html=True)
-
-# ОДНА СТРОКА КОЛОНОК (0.7 к 10) — МОЗГ И ТЕКСТ В ОДИН РЯД
-c_img, c_txt = st.columns([0.7, 10])
-
-with c_img:
+# 1. ФУНКЦИЯ КОДИРОВАНИЯ КАРТИНКИ (Чтобы вшить в HTML)
+def get_base64_image(image_path):
     try:
-        # Твой brain3.jpg — БЕЗ ВНЕШНИХ ССЫЛОК!
-        st.image("brain3.jpg", width=60)
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
     except:
-        st.write("🧠")
+        return ""
 
-with c_txt:
-    # Текст NeuroExpert теперь ПЛОТНО И РОВНО рядом с мозгом
-    st.markdown("""
-        <div style="margin-top: 5px;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1;">
+# Кодируем твой мозг
+img_base64 = get_base64_image("brain3.jpg")
+
+# 2. ЕДИНЫЙ БЛОК: ГРАДИЕНТ + МОЗГ + ТЕКСТ (ВСЁ В ОДНОМ СТАКАНЕ)
+st.markdown(f"""
+    <div style="
+        background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
+        padding: 20px; 
+        border-radius: 15px; 
+        border-left: 5px solid #FF4B4B; 
+        display: flex; 
+        align-items: center; 
+        gap: 20px;
+        margin-bottom: 25px;
+    ">
+        <img src="data:image/jpeg;base64,{img_base64}" 
+             style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
+        <div>
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1.1;">
                 <span style="color: #FF4B4B;">Neuro</span>Expert
             </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.95em;">
+            <p style="color: #808495; font-style: italic; margin-top: 4px; font-size: 0.95em;">
                 Комплексная система синдромального нейропсихологического анализа
             </p>
         </div>
-    """, unsafe_allow_html=True)
+    </div>
+""", unsafe_allow_html=True)
 
-st.markdown('</div><br>', unsafe_allow_html=True)
-
-# --- 3. ГАЙД (AppGuide.pdf) — УХОДИТ В САЙДБАР (НЕ ЛОМАЕТ ШАПКУ) ---
+# 3. ГАЙД - В САЙДБАР (ЧТОБЫ НЕ ПОРТИЛ МОНОЛИТ)
 with st.sidebar:
     st.markdown("---")
     try:
