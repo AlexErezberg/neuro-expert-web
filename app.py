@@ -186,7 +186,18 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-# --- 1. ТВОЙ ГРАДИЕНТНЫЙ БЛОК (ПОДЛОЖКА) ---
+# --- 1. ПЛОТНОСТЬ (CSS-ДИЕТА) ---
+st.markdown("""
+    <style>
+    .stSlider { margin-bottom: -20px !important; padding-top: 0px !important; }
+    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] .stTextInput, 
+    [data-testid="stSidebar"] .stNumberInput, [data-testid="stSidebar"] .stSelectbox,
+    [data-testid="stSidebar"] .stMultiSelect { margin-bottom: -15px !important; }
+    .block-container { padding-top: 1rem !important; }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- 2. ШАПКА (МОНОЛИТ: ПОДЛОЖКА + brain3 + ТЕКСТ) ---
 st.markdown("""
     <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
                 padding: 10px; border-radius: 15px; border-left: 5px solid #FF4B4B; 
@@ -194,14 +205,11 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 2. ВНУТРЯНКА: brain3 И ПОЛНОЕ НАЗВАНИЕ ---
 try:
-    # Твой микро-мозг (brain3)
     st.image("brain3.jpg", width=50)
 except:
     st.write("🧠")
 
-# Текст "прыгает" вверх и вправо, название СТРОГО ПО ТВОЕМУ КАНОНУ
 st.markdown("""
     <div style="margin-top: -65px; margin-left: 65px;">
         <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.8em; line-height: 1;">
@@ -213,18 +221,6 @@ st.markdown("""
     </div>
     <br>
 """, unsafe_allow_html=True)
-
-with col_text:
-    st.markdown("""
-        <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 15px; border-radius: 15px; border-left: 5px solid #FF4B4B; margin-left: -20px;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
-                <span style="color: #FF4B4B;">Neuro</span>Expert
-            </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em;">
-                Комплексная система синдромального нейропсихологического анализа
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
     
 # --- 1. ФУНКЦИЯ СБРОСА (Оставляем как есть) ---
 def reset_app():
