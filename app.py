@@ -206,29 +206,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 1. ТВОЙ КУСОК (ПЕРЕДЕЛАННЫЙ ПОД МИКРО-ЛОГО И КРАСНЫЙ ЦВЕТ) ---
-col_logo, col_text = st.columns([0.5, 10]) 
-
-with col_logo:
-    # Твоя пикча вместо эмодзи (максимально маленькая)
-    try:
-        st.image("brain3.jpg", width=20)
-    except:
-        st.write("🧠")
-
-with col_text:
-    # Твой текст прижимается вплотную к микро-лого
-    st.markdown("""
-        <div style="padding-top: 0px; margin-left: -20px;">
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2em; line-height: 1;">
-                <span style="color: #FF4B4B;">Neuro</span>Expert
-            </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 2px; font-size: 0.9em;">
-                Комплексная система синдромального нейропсихологического анализа
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
-
 # --- 1. ФУНКЦИЯ СБРОСА (Оставляем как есть) ---
 def reset_app():
     if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
