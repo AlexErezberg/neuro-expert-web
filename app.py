@@ -24,7 +24,7 @@ class NeuroExpertMaster:
             self.sr = deep_find(self.lib, "suicide_risk")
             self.nv = deep_find(self.lib, "neuro_vectors")
             # st.toast — это маленькое всплывающее окно в Стримлите
-            st.toast("✅ v66.1-FINAL. БЕСПЕРЕБОЙНИК ЗАПУЩЕН")
+            st.toast("✅ ПРИЛОЖЕНИЕ ЗАПУЩЕНО")
         except Exception as e: 
             st.error(f"❌ Ошибка инициализации: {e}")
             self.lib = {}
@@ -186,25 +186,26 @@ matrix = load_matrix()
 
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
-st.markdown("""
-    <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 20px; border-radius: 15px; border-left: 5px solid #2e6bef; margin-bottom: 25px;">
-        <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            🧠 <span style="color: #2e6bef;">Neuro</span>Expert <span style="font-weight: 200; font-size: 0.8em; opacity: 0.7;">Master Engine</span>
-        </h1>
-        <p style="color: #808495; font-style: italic; margin-top: 5px; font-size: 0.9em;">
-            Комплексная система анализа нейронных ансамблей и когнитивной когерентности v68.0
-        </p>
-    </div>
-    <style>
-    /* Анимация пульсации для пущего пафоса */
-    @keyframes pulse {
-        0% { opacity: 0.6; }
-        50% { opacity: 1; }
-        100% { opacity: 0.6; }
-    }
-    .stTitle { animation: pulse 3s infinite ease-in-out; }
-    </style>
-""", unsafe_allow_html=True)
+# --- 1. ШАПКА: ТВОЯ ПИКЧА + ТВОЙ ТЕКСТ ---
+# Создаем две колонки: узкую для лого и широкую для текста
+col_logo, col_text = st.columns([1, 4]) 
+
+with col_logo:
+    # Вставляем ТВОЮ картинку (убедись, что файл brain3.jpg в корне GitHub)
+    st.image("brain3.jpg", use_container_width=True)
+
+with col_text:
+    # Оставляем твой пафосный градиентный фон для текста
+    st.markdown("""
+        <div style="background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); padding: 15px; border-radius: 15px; border-left: 5px solid #2e6bef;">
+            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em;">
+                <span style="color: #2e6bef;">Neuro</span>Expert
+            </h1>
+            <p style="color: #808495; font-style: italic; margin-top: 5px; font-size: 1em;">
+                Комплексная система синдромального нейропсихологического анализа
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # --- 1. ФУНКЦИЯ СБРОСА (Вставлять СЮДА) ---
 def reset_app():
@@ -224,7 +225,7 @@ if st.sidebar.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
 with st.sidebar:
 # ПРИШПАНДОРИВАЕМ МОЗГИ (Если залил на Гитхаб)
     try:
-        st.image("brain3.jpg", use_container_width=True)
+        st.image("brain2.jpg", use_container_width=True)
     except:
         pass # Если картинки еще нет, просто пропустит
     st.header("📋 Паспорт")
