@@ -234,7 +234,7 @@ with st.sidebar:
         pass
 
 # --- 1. СЕКРЕТНЫЙ ЗАМОК (Вживлять СЮДА) ---
-PASSWORD = "твой_код_здесь" # <--- ЗАМЕНИ НА СВОЙ ПАРОЛЬ!
+PASSWORD = "19890707Aa*" # <--- ЗАМЕНИ НА СВОЙ ПАРОЛЬ!
 
 if "auth" not in st.session_state:
     st.session_state["auth"] = False
