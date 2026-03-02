@@ -233,18 +233,20 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 1. СНАЧАЛА СОЗДАЕМ КЛЮЧ (Чтобы не было KeyError) ---
+# --- 1. СЕКРЕТНЫЙ ЗАМОК (В САМОМ ВЕРХУ ПЕРЕД ПРОВЕРКОЙ) ---
+PASSWORD = "твой_код_здесь" # <--- УБЕДИСЬ, ЧТО ОН ТУТ!
+
 if "auth" not in st.session_state:
     st.session_state["auth"] = False
 
-# --- 2. ТЕПЕРЬ ПРОВЕРЯЕМ (Только теперь!) ---
+# --- 2. ТЕПЕРЬ ПРОВЕРЯЕМ ---
 if not st.session_state["auth"]:
-    # Твой блок шапки здесь (NeuroExpert)
-    # ...
+    # Твоя монолитная шапка (NeuroExpert)
+    # ... (вставь сюда свой блок с градиентом и мозгом) ...
     
     pwd_input = st.text_input("🔑 Доступ к системе:", type="password")
     if pwd_input == PASSWORD:
-        # ЗАСТАВКА (v86.1)
+        # ЗАСТАВКА (Строго 1.5 сек)
         with st.empty():
             st.markdown(f"""
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; background-color: #0e1117;">
@@ -256,7 +258,9 @@ if not st.session_state["auth"]:
             time.sleep(1.5)
             st.session_state["auth"] = True
             st.rerun()
-    st.stop()
+    elif pwd_input:
+        st.error("❌ Отказано")
+    st.stop() # ОСТАНАВЛИВАЕМ ВСЁ ДО ВВОДА ПАРОЛЯ
 
 # --- 2. ЛЕВАЯ ПАНЕЛЬ (ПОЯВИТСЯ ТОЛЬКО ПОСЛЕ ПАРОЛЯ) ---
 with st.sidebar:
