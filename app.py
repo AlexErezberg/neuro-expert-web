@@ -289,24 +289,30 @@ scores = []
 for i, name in enumerate(f_names):
     scores.append(st.slider(f"{i+1}. {name}", 0, 5, 0, key=f"s_{i}"))
 
-# --- 4. КНОПКА ГЕНЕРАЦИИ (В САМОМ НИЗУ) ---
+# --- ФУНКЦИЯ ДИАЛОГОВОГО ОКНА ---
+@st.dialog("📄 ИТОГОВЫЙ ПРОТОКОЛ", width="large")
+def show_result_dialog(report_text, fio_name):
+    st.write(f"Пациент: **{fio_name}**")
+    # Твой текст-ареа (кнопка копирования в ней встроена справа сверху)
+    st.text_area("", report_text, height=400)
+    
+    # ТВОЙ ВОРД-ПРИНТЕР (ПЕРЕЕХАЛ СЮДА)
+    doc = Document()
+    doc.add_paragraph(f"ПРОТОКОЛ: {fio_name}")
+    doc.add_paragraph(report_text)
+    bio = io.BytesIO()
+    doc.save(bio)
+    st.download_button("📥 СКАЧАТЬ .DOCX", bio.getvalue(), f"{fio_name}.docx")
+        
+# --- 5. САМА КНОПКА ЗАПУСКА (В САМОМ НИЗУ) ---
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
-    # Твой движок запускается здесь...
     full_code = f"{p_type}{p_gen}/{''.join(map(str, scores))}"
     
-    # Создаем объект энджина прямо здесь
+    # Создаем объект энджина
     engine = NeuroExpertMaster(matrix)
     
     # Прогоняем через RUN
     report = engine.run(full_code, ",".join(presets), ",".join(selected_tags))
     
-    st.markdown("### Итоговый текст:")
-    st.text_area("", report, height=500)
-    
-    # ВОРД-ПРИНТЕР
-    doc = Document()
-    doc.add_paragraph(f"ПРОТОКОЛ: {fio}")
-    doc.add_paragraph(report)
-    bio = io.BytesIO()
-    doc.save(bio)
-    st.download_button("📥 Скачать .docx", bio.getvalue(), f"{fio}.docx")
+    # ВЫЗЫВАЕМ ОКНО (Оно затенит ползунки и покажет результат)
+    show_result_dialog(report, fio)
