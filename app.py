@@ -294,7 +294,7 @@ with st.sidebar:
     # БЛОК КРЕДИТОВ (Твой коммерческий след)
     st.markdown("""
         <div style="background-color: #1c1f26; padding: 10px; border-radius: 10px; border: 1px solid #3d404a; text-align: center;">
-            <p style="color: #808495; font-size: 0.7em; margin: 0;">© 2024-2025 Все права защищены</p>
+            <p style="color: #808495; font-size: 0.7em; margin: 0;">© 2026 Все права защищены</p>
             <p style="color: #FF4B4B; font-weight: bold; font-size: 0.9em; margin: 5px 0;">NEURO-EXPERT ENGINE</p>
             <p style="color: #ffffff; font-size: 0.75em; margin: 0;">Разработка и методология:<br><b>Cognicore Systems</b></p>
             <hr style="margin: 8px 0; border: 0.5px solid #333;">
