@@ -301,30 +301,52 @@ for i, name in enumerate(f_names):
 # --- ФУНКЦИЯ ДИАЛОГОВОГО ОКНА ---
 @st.dialog("📄 ИТОГОВЫЙ ПРОТОКОЛ", width="large")
 def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, scores, f_names):
-    # 1. ШИФРОВКА БУСТЕРОВ (Твоя логика)
+    # --- 1. ЛОГИКА ЯДРА (N, D, Org, Sch) ---
+    core_label = "Org"
+    d_presets = ["Дког", "Дгор", "Дгорсом", "Дсом", "Дтр"]
+    has_d_preset = any(p in presets for p in d_presets)
+    if p_type == "9" or has_d_preset: core_label = "D"
+    elif p_type == "8": core_label = "Sch"
+    elif p_type in ["0", "0т", "0*", "0+", "0-", "00"]: core_label = "N"
+
+    # --- 2. ЛОГИКА БУСТЕРОВ ДЛЯ БЛОКОВ ---
     is_organ = p_type in ["1", "2", "3", "4", "5"]
     b1 = 3 if any(p in ["н", "Апат", "асте"] for p in presets) and is_organ else 0
     b2 = 3 if any(p in ["Асенс", "Ааф", "Аак", "Асем", "Апркин", "Апркон", "АгнП", "АгнЛ", "неглект"] for p in presets) and is_organ else 0
     b3 = 3 if any(p in ["праврег", "леврег", "Аэф", "Апрдин"] for p in presets) and is_organ else 0
 
-    # 2. РАЗМЕТКА ИНТЕРФЕЙСА (Три колонки: Блоки | График | Сети)
+    # --- 3. СБОРКА ГРАФИКА (Чтобы не было NameError!) ---
+    fig = go.Figure()
+    fig.add_trace(go.Scatterpolar(
+        r=scores + [scores], 
+        theta=f_names + [f_names],
+        fill='toself',
+        fillcolor='rgba(255, 75, 75, 0.3)',
+        line=dict(color='#FF4B4B', width=2)
+    ))
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 5]), angularaxis=dict(tickfont=dict(size=10, color="white"))),
+        showlegend=False, height=400, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        annotations=[dict(x=0.5, y=0.5, text=core_label, showarrow=False, font=dict(size=32, color="#FF4B4B", family="Arial Black"))]
+    )
+
+    # --- 4. РАЗМЕТКА: БЛОКИ (0.2) | ГРАФИК (0.6) | СЕТИ (0.2) ---
     col_blocks, col_chart, col_nets = st.columns([0.2, 0.6, 0.2])
 
     with col_blocks:
         st.write("🧠 **Блоки:**")
-        # Проверка по твоим формулам
-        blocks = [
+        # Проверка по твоей формуле (с учетом b1, b2, b3)
+        blks = [
             ("БЛОК I", scores[0] + scores[6] + b1 >= 3),
             ("БЛОК II", scores[1] + scores[2] + scores[5] + b2 >= 3),
             ("БЛОК III", scores[3] + scores[9] + b3 >= 3)
         ]
-        for name, active in blocks:
+        for name, active in blks:
             bg = "#FF4B4B" if active else "#1c1f26"
-            st.markdown(f'<div style="background:{bg}; color:white; padding:8px; border-radius:5px; margin-bottom:5px; text-align:center; font-weight:bold; font-size:0.8em; border:1px solid #333;">{name}</div>', unsafe_allow_html=True)
+            tc = "white" if active else "#555"
+            st.markdown(f'<div style="background:{bg}; color:{tc}; padding:8px; border-radius:5px; margin-bottom:5px; text-align:center; font-weight:bold; font-size:0.75em; border:1px solid #333;">{name}</div>', unsafe_allow_html=True)
 
     with col_chart:
-        # Твой график Plotly (оставляем как был в v80.6)
-        # ... (код отрисовки fig с core_label) ...
         st.plotly_chart(fig, use_container_width=True)
 
     with col_nets:
@@ -333,11 +355,24 @@ def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, sc
         for net in networks:
             is_active = any(p.upper() == net.upper() for p in presets)
             bg = "#FF4B4B" if is_active else "#1c1f26"
-            st.markdown(f'<div style="background:{bg}; color:white; padding:4px; border-radius:5px; margin-bottom:4px; text-align:center; font-size:0.75em; font-weight:bold; border:1px solid #333;">{net}</div>', unsafe_allow_html=True)
+            tc = "white" if is_active else "#444"
+            st.markdown(f'<div style="background:{bg}; color:{tc}; padding:4px; border-radius:5px; margin-bottom:4px; text-align:center; font-size:0.7em; font-weight:bold; border:1px solid #333;">{net}</div>', unsafe_allow_html=True)
 
     st.markdown("---")
     st.text_area("Текст заключения:", report_text, height=300)
-    # Кнопки ВОРД / КОПИРОВАТЬ / ВЫХОД внизу...
+    
+    # КНОПКИ (Ворд / Копировать / Выход)
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        doc = Document()
+        doc.add_paragraph(f"ПРОТОКОЛ: {fio_name}\n\n{report_text}")
+        bio = io.BytesIO(); doc.save(bio)
+        st.download_button("📥 ВОРД", bio.getvalue(), f"{fio_name}.docx", use_container_width=True)
+    with c2:
+        if st.button("📋 КОПИРОВАТЬ", use_container_width=True):
+            st.code(report_text, language=None)
+    with c3:
+        if st.button("❌ ВЫХОД", use_container_width=True): st.rerun()
         
 # --- 5. САМА КНОПКА ЗАПУСКА (В САМОМ НИЗУ) ---
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
