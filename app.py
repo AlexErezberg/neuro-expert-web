@@ -321,11 +321,29 @@ def show_result_dialog(report_text, fio_name):
     st.markdown("---")
     
     # ЛОГИКА ЦЕНТРАЛЬНОГО ЯДРА (Твой шифр)
-    core_label = "Org" # По умолчанию
-    if p_type in ["0", "0т", "0*", "0+", "0-", "00"]: core_label = "N"
-    elif p_type == "8": core_label = "Sch"
-    elif "деп" in selected_tags or "па" in selected_tags: core_label = "D"
-    elif p_type in ["1", "2", "3", "4", "5"]: core_label = "Org"
+    core_label = "Org" # База для 1-5
+    
+    # Список твоих депрессивных надстроек
+    d_presets = ["Дког", "Дгор", "Дгорсом", "Дсом", "Дтр"]
+    
+    # 1. Сначала проверяем ДЕПРЕССИЮ (Профиль 9 или любая Д-надстройка)
+    # Используем .lower() и .strip(), чтобы не споткнуться о регистр
+    has_d_preset = any(p in presets for p in d_presets)
+    
+    if p_type == "9" or has_d_preset:
+        core_label = "D"
+    
+    # 2. Потом ШИЗО (8)
+    elif p_type == "8":
+        core_label = "Sch"
+        
+    # 3. Потом НОРМУ (0-группа)
+    elif p_type in ["0", "0т", "0*", "0+", "0-", "00"]:
+        core_label = "N"
+        
+    # 4. И только потом ОРГАНИКУ (1-5)
+    elif p_type in ["1", "2", "3", "4", "5"]:
+        core_label = "Org"
 
     # Данные для лучей (f_names и scores у нас уже есть в основном коде)
     fig = go.Figure()
