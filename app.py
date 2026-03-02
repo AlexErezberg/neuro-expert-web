@@ -234,7 +234,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # --- 1. СЕКРЕТНЫЙ ЗАМОК (В САМОМ ВЕРХУ ПЕРЕД ПРОВЕРКОЙ) ---
-PASSWORD = "твой_код_здесь" # <--- УБЕДИСЬ, ЧТО ОН ТУТ!
+PASSWORD = "19890707Aa*" # <--- УБЕДИСЬ, ЧТО ОН ТУТ!
 
 if "auth" not in st.session_state:
     st.session_state["auth"] = False
