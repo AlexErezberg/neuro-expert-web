@@ -4,6 +4,7 @@ import random
 import traceback
 import re
 import io
+import plotly.graph_objects as go
 from docx import Document
 
 class NeuroExpertMaster:
@@ -301,31 +302,59 @@ for i, name in enumerate(f_names):
 @st.dialog("📄 ИТОГОВЫЙ ПРОТОКОЛ", width="large")
 def show_result_dialog(report_text, fio_name):
     st.write(f"📊 Пациент: **{fio_name}**")
+    st.text_area("Текст заключения:", report_text, height=350)
     
-    # 1. ТВОЙ ТЕКСТ (Основной вид)
-    st.text_area("Предпросмотр:", report_text, height=350)
-    
-    # 2. РЯД КНОПОК (Тройничок: Скачать, Копировать, Закрыть)
+    # 1. РЯД КНОПОК
     c1, c2, c3 = st.columns(3)
-    
     with c1:
-        # ТВОЙ ВОРД-ПРИНТЕР
         doc = Document()
-        doc.add_paragraph(f"ПРОТОКОЛ: {fio_name}")
-        doc.add_paragraph(report_text)
-        bio = io.BytesIO()
-        doc.save(bio)
+        doc.add_paragraph(f"ПРОТОКОЛ: {fio_name}\n\n{report_text}")
+        bio = io.BytesIO(); doc.save(bio)
         st.download_button("📥 ВОРД", bio.getvalue(), f"{fio_name}.docx", use_container_width=True)
-        
     with c2:
-        # МАГИЯ КОПИРОВАНИЯ: Показываем текст в блоке кода (там кнопка копирования САМАЯ БОЛЬШАЯ)
         if st.button("📋 КОПИРОВАТЬ", use_container_width=True):
             st.code(report_text, language=None)
-            st.toast("⬆️ Нажми иконку в углу появившегося серого блока!")
-            
     with c3:
-        if st.button("❌ ВЫХОД", use_container_width=True):
-            st.rerun()
+        if st.button("❌ ВЫХОД", use_container_width=True): st.rerun()
+
+    # --- 2. ВИЗУАЛИЗАЦИЯ: ШИПОВАННАЯ ПАУТИНКА ---
+    st.markdown("---")
+    
+    # ЛОГИКА ЦЕНТРАЛЬНОГО ЯДРА (Твой шифр)
+    core_label = "Org" # По умолчанию
+    if p_type in ["0", "0т", "0*", "0+", "0-", "00"]: core_label = "N"
+    elif p_type == "8": core_label = "Sch"
+    elif "деп" in selected_tags or "па" in selected_tags: core_label = "D"
+    elif p_type in ["1", "2", "3", "4", "5"]: core_label = "Org"
+
+    # Данные для лучей (f_names и scores у нас уже есть в основном коде)
+    fig = go.Figure()
+    fig.add_trace(go.Scatterpolar(
+        r=scores + [scores[0]], # Замыкаем круг
+        theta=f_names + [f_names[0]],
+        fill='toself',
+        fillcolor='rgba(255, 75, 75, 0.3)',
+        line=dict(color='#FF4B4B', width=2),
+        name='Профиль'
+    ))
+
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(visible=True, range=[0, 5], tickfont=dict(size=10, color="#808495")),
+            angularaxis=dict(tickfont=dict(size=11, color="#ffffff"))
+        ),
+        showlegend=False,
+        margin=dict(l=40, r=40, t=20, b=20),
+        height=400,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        # РИСУЕМ БУКВУ В ЦЕНТРЕ
+        annotations=[dict(x=0.5, y=0.5, text=core_label, showarrow=False, 
+                          font=dict(size=30, color="#FF4B4B", family="Arial Black"),
+                          xref="paper", yref="paper")]
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
         
 # --- 5. САМА КНОПКА ЗАПУСКА (В САМОМ НИЗУ) ---
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
