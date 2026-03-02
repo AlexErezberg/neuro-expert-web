@@ -233,15 +233,6 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# 3. ГАЙД - В САЙДБАР (ЧТОБЫ НЕ ПОРТИЛ МОНОЛИТ)
-with st.sidebar:
-    st.markdown("---")
-    try:
-        with open("AppGuide.pdf", "rb") as f:
-            st.download_button("📚 СКАЧАТЬ ГАЙД", f, "NeuroExpert_Guide.pdf", "application/pdf")
-    except:
-        pass
-
 # --- 1. СЕКРЕТНЫЙ ЗАМОК (Вживлять СЮДА) ---
 PASSWORD = "19890707Aa*" # <--- ЗАМЕНИ НА СВОЙ ПАРОЛЬ!
 
@@ -260,45 +251,54 @@ if not st.session_state["auth"]:
             st.error("❌ Отказано")
     st.stop() # ОСТАНАВЛИВАЕМ всё остальное!
 
-# --- 2. ЛЕВАЯ ПАНЕЛЬ (САЙДБАР) ---
+# --- 2. ЛЕВАЯ ПАНЕЛЬ (ПОЯВИТСЯ ТОЛЬКО ПОСЛЕ ПАРОЛЯ) ---
 with st.sidebar:
-    # Твои колонки для мозгов
+    # 1. МОЗГИ (Ужатые)
     c1, c2, c3 = st.columns([1, 2, 1]) 
     with c2:
-        try:
-            st.image("brain2.jpg", width=150)
-        except:
-            st.write("🧠")
+        try: st.image("brain2.jpg", width=120)
+        except: st.write("🧠")
             
+    # 2. МИКРО-КНОПКИ В ОДИН РЯД (Сброс и Гайд теперь тут!)
+    c_rst, c_gde = st.columns(2)
+    with c_rst:
+        if st.button("♻️ СБРОС", type="secondary", use_container_width=True):
+            reset_app()
+    with c_gde:
+        try:
+            with open("AppGuide.pdf", "rb") as f:
+                st.download_button("📚 ГАЙД", f, "AppGuide.pdf", use_container_width=True)
+        except: pass
+
     st.header("📋 Пациент")
     
-    # Кнопка сброса (одна, в сайдбаре)
-    if st.button("♻️ СБРОСИТЬ ВСЁ", type="secondary"):
-        reset_app()
-    
     fio = st.text_input("ФИО", "Иванов И.И.", key="fio_input")
-    age = st.number_input("Возраст", 1, 110, 65, key="age_input")
-    p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], key="profile_select")
-    p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
-
-    st.markdown("---") # Черта
     
-    # ПЕРЕНЕСЛИ СПИСКИ СЮДА (ДЛЯ УДОБСТВА И СМАРТФОНА)
+    # Пол и Возраст в одну строку для компактности
+    c_age, c_sex = st.columns([1, 1])
+    with c_age:
+        age = st.number_input("Возраст", 1, 110, 65, key="age_input")
+    with c_sex:
+        p_gen = st.radio("Пол", ["м", "ж"], horizontal=True)
+    
+    p_type = st.selectbox("Тип", ["0*", "0+", "00", "0т", "0-", "0000", "0", "0сон", "1", "2", "3", "4", "5", "7", "8", "9", "9гэ"], key="profile_select")
+
+    st.markdown("---")
+    
+    # Надстройки и Теги
     adj_keys = list(matrix.get("phenomenology_adjustments", {}).keys())
     presets = st.multiselect("🛠 Надстройки", adj_keys, key="adj_ms")
     tag_keys = list(matrix.get("tags", {}).keys())
     selected_tags = st.multiselect("🏷 Теги", tag_keys, key="tags_ms")
 
-    st.markdown("---") # Отсекаем рабочую зону
-    
-    # БЛОК КРЕДИТОВ (Твой коммерческий след)
+    # ТВОИ КРЕДИТЫ (Cognicore Systems)
     st.markdown("""
-        <div style="background-color: #1c1f26; padding: 10px; border-radius: 10px; border: 1px solid #3d404a; text-align: center;">
+        <div style="background-color: #1c1f26; padding: 10px; border-radius: 10px; border: 1px solid #3d404a; text-align: center; margin-top: 20px;">
             <p style="color: #808495; font-size: 0.7em; margin: 0;">© 2026 Все права защищены</p>
             <p style="color: #FF4B4B; font-weight: bold; font-size: 0.9em; margin: 5px 0;">NEURO-EXPERT ENGINE</p>
             <p style="color: #ffffff; font-size: 0.75em; margin: 0;">Разработка и методология:<br><b>Cognicore Systems</b></p>
             <hr style="margin: 8px 0; border: 0.5px solid #333;">
-            <p style="color: #555; font-size: 0.6em;">Версия: Commercial v85.0-STABLE</p>
+            <p style="color: #555; font-size: 0.6em;">Commercial v85.6-STABLE</p>
         </div>
     """, unsafe_allow_html=True)
 
