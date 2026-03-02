@@ -300,7 +300,7 @@ for i, name in enumerate(f_names):
 
 # --- ФУНКЦИЯ ДИАЛОГОВОГО ОКНА ---
 @st.dialog("📄 ИТОГОВЫЙ ПРОТОКОЛ", width="large")
-def show_result_dialog(report_text, fio_name):
+def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, scores, f_names):
     st.write(f"📊 Пациент: **{fio_name}**")
     st.text_area("Текст заключения:", report_text, height=350)
     
@@ -317,44 +317,44 @@ def show_result_dialog(report_text, fio_name):
     with c3:
         if st.button("❌ ВЫХОД", use_container_width=True): st.rerun()
 
-    # --- 2. ВИЗУАЛИЗАЦИЯ И ИНДИКАТОРЫ ---
     st.markdown("---")
     
-    # Делим низ на График (70%) и Индикаторы (30%)
-    col_chart, col_labels = st.columns([7, 3])
+    # --- 2. ПОДГОТОВКА ГРАФИКА (Чтобы не было NameError) ---
+    core_label = "Org"
+    d_presets = ["Дког", "Дгор", "Дгорсом", "Дсом", "Дтр"]
+    has_d_preset = any(p in presets for p in d_presets)
+    
+    if p_type == "9" or has_d_preset: core_label = "D"
+    elif p_type == "8": core_label = "Sch"
+    elif p_type in ["0", "0т", "0*", "0+", "0-", "00"]: core_label = "N"
 
+    fig = go.Figure()
+    fig.add_trace(go.Scatterpolar(
+        r=scores + [scores[0]], 
+        theta=f_names + [f_names[0]],
+        fill='toself',
+        fillcolor='rgba(255, 75, 75, 0.3)',
+        line=dict(color='#FF4B4B', width=2)
+    ))
+    fig.update_layout(
+        polar=dict(radialaxis=dict(visible=True, range=[0, 5]), angularaxis=dict(tickfont=dict(size=10, color="white"))),
+        showlegend=False, height=400, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
+        annotations=[dict(x=0.5, y=0.5, text=core_label, showarrow=False, font=dict(size=32, color="#FF4B4B", family="Arial Black"))]
+    )
+
+    # --- 3. ИНДИКАТОРЫ СПРАВА ---
+    col_chart, col_labels = st.columns([0.7, 0.3])
     with col_chart:
-        # Твоя паутинка с ядром (Sch, N, D, Org)
-        # ... (тут остается твой код Plotly с core_label) ...
         st.plotly_chart(fig, use_container_width=True)
-
+    
     with col_labels:
-        st.write("🔎 **Сетевой статус:**")
-        # ТВОЙ СПИСОК СЕТЕВУХ (Зависят сугубо от presets)
+        st.write("🔎 **Сети:**")
         networks = ["ДЭП", "МСА", "МКАС", "ТАЛАМ", "РЕТИК", "СТРИАР", "МПС"]
-        
         for net in networks:
-            # Если надстройка выбрана - горит красным, если нет - серая тень
-            is_active = net in presets or net.lower() in [p.lower() for p in presets]
-            color = "#FF4B4B" if is_active else "#262730"
-            text_color = "white" if is_active else "#555"
-            border = "none" if is_active else "1px solid #333"
-            
-            st.markdown(f"""
-                <div style="
-                    background-color: {color}; 
-                    color: {text_color}; 
-                    padding: 5px 10px; 
-                    border-radius: 5px; 
-                    margin-bottom: 5px; 
-                    text-align: center;
-                    font-weight: bold;
-                    font-size: 0.8em;
-                    border: {border};
-                ">
-                    {net}
-                </div>
-            """, unsafe_allow_html=True)
+            is_active = any(p.upper() == net.upper() for p in presets)
+            bg = "#FF4B4B" if is_active else "#1c1f26"
+            tc = "white" if is_active else "#444"
+            st.markdown(f'<div style="background:{bg}; color:{tc}; padding:4px; border-radius:5px; margin-bottom:4px; text-align:center; font-size:0.8em; font-weight:bold; border:1px solid #333;">{net}</div>', unsafe_allow_html=True)
         
 # --- 5. САМА КНОПКА ЗАПУСКА (В САМОМ НИЗУ) ---
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
