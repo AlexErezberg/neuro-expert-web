@@ -289,6 +289,19 @@ with st.sidebar:
     tag_keys = list(matrix.get("tags", {}).keys())
     selected_tags = st.multiselect("🏷 Теги", tag_keys, key="tags_ms")
 
+    st.markdown("---") # Отсекаем рабочую зону
+    
+    # БЛОК КРЕДИТОВ (Твой коммерческий след)
+    st.markdown("""
+        <div style="background-color: #1c1f26; padding: 10px; border-radius: 10px; border: 1px solid #3d404a; text-align: center;">
+            <p style="color: #808495; font-size: 0.7em; margin: 0;">© 2024-2025 Все права защищены</p>
+            <p style="color: #FF4B4B; font-weight: bold; font-size: 0.9em; margin: 5px 0;">NEURO-EXPERT ENGINE</p>
+            <p style="color: #ffffff; font-size: 0.75em; margin: 0;">Разработка и методология:<br><b>Cognicore Systems</b></p>
+            <hr style="margin: 8px 0; border: 0.5px solid #333;">
+            <p style="color: #555; font-size: 0.6em;">Версия: Commercial v85.0-STABLE</p>
+        </div>
+    """, unsafe_allow_html=True)
+
 # --- 3. ЦЕНТРАЛЬНОЕ ПОЛЕ (ФУНКЦИИ) ---
 st.subheader("📊 Функции (0-5)")
 f_names = ["Внимание", "Зрит.Гнозис", "Простр.Гнозис", "Дин.Праксис", "Кин.Праксис", "Констр.Праксис", "Счет", "Речь", "Память", "Мышление"]
