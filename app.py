@@ -359,12 +359,16 @@ def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, sc
 # --- 5. САМА КНОПКА ЗАПУСКА (В САМОМ НИЗУ) ---
 if st.button("🚀 СГЕНЕРИРОВАТЬ ПРОТОКОЛ"):
     full_code = f"{p_type}{p_gen}/{''.join(map(str, scores))}"
-    
-    # Создаем объект энджина
     engine = NeuroExpertMaster(matrix)
-    
-    # Прогоняем через RUN
     report = engine.run(full_code, ",".join(presets), ",".join(selected_tags))
     
-    # ВЫЗЫВАЕМ ОКНО (Оно затенит ползунки и покажет результат)
-    show_result_dialog(report, fio)
+    # ВНИМАНИЕ: Передаем ВСЕ ПАРАМЕТРЫ, чтобы график и лейблы их увидели
+    show_result_dialog(
+        report_text=report, 
+        fio_name=fio, 
+        p_type=p_type, 
+        presets=presets, 
+        selected_tags=selected_tags, 
+        scores=scores, 
+        f_names=f_names
+    )
