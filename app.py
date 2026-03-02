@@ -305,7 +305,8 @@ def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, sc
     core_label = "Org"
     d_presets = ["Дког", "Дгор", "Дгорсом", "Дсом", "Дтр"]
     has_d_preset = any(p in presets for p in d_presets)
-    if p_type == "9" or has_d_preset: core_label = "D"
+    if p_type == "9" or p_type == "Дгэ" or has_d_preset: 
+        core_label = "D"
     elif p_type == "8": core_label = "Sch"
     elif p_type in ["0", "0т", "0*", "0+", "0-", "00"]: core_label = "N"
 
