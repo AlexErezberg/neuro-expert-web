@@ -332,12 +332,12 @@ def show_result_dialog(report_text, fio_name, p_type, presets, selected_tags, sc
     # --- 3. СБОРКА ГРАФИКА (Чтобы не было NameError!) ---
     fig = go.Figure()
     fig.add_trace(go.Scatterpolar(
-        r=scores + [scores], 
-        theta=f_names + [f_names],
+        r = scores + [scores[0]],       # Берем только ПЕРВЫЙ балл
+        theta = f_names + [f_names[0]], # Берем только ПЕРВОЕ название
         fill='toself',
         fillcolor='rgba(255, 75, 75, 0.3)',
         line=dict(color='#FF4B4B', width=2)
-    ))
+))
     fig.update_layout(
         polar=dict(radialaxis=dict(visible=True, range=[0, 5]), angularaxis=dict(tickfont=dict(size=10, color="white"))),
         showlegend=False, height=400, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)',
