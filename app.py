@@ -184,6 +184,17 @@ def load_matrix():
 
 matrix = load_matrix()
 
+# --- ВОТ ЭТОГО У ТЕБЯ НЕ ХВАТАЕТ (ВСТАВЬ В НАЧАЛО) ---
+def reset_app():
+    if "fio_input" in st.session_state: st.session_state["fio_input"] = "Иванов И.И."
+    if "age_input" in st.session_state: st.session_state["age_input"] = 65
+    if "profile_select" in st.session_state: st.session_state["profile_select"] = "0*"
+    for i in range(10):
+        if f"s_{i}" in st.session_state: st.session_state[f"s_{i}"] = 0
+    if "adj_ms" in st.session_state: st.session_state["adj_ms"] = []
+    if "tags_ms" in st.session_state: st.session_state["tags_ms"] = []
+    st.rerun()
+
 st.set_page_config(page_title="NeuroExpert Web", layout="wide")
 
 import base64
@@ -199,27 +210,24 @@ def get_base64_image(image_path):
 # Кодируем твой мозг
 img_base64 = get_base64_image("brain3.jpg")
 
-# 2. ЕДИНЫЙ БЛОК: ГРАДИЕНТ + МОЗГ + ТЕКСТ (ВСЁ В ОДНОМ СТАКАНЕ)
+# --- СУПЕР-СЛИМ ШАПКА (В ОДНУ СТРОКУ) ---
 st.markdown(f"""
     <div style="
         background: linear-gradient(90deg, #0e1117 0%, #1c1f26 100%); 
-        padding: 20px; 
-        border-radius: 15px; 
+        padding: 8px 15px; 
+        border-radius: 10px; 
         border-left: 5px solid #FF4B4B; 
         display: flex; 
         align-items: center; 
-        gap: 20px;
-        margin-bottom: 25px;
+        gap: 15px;
+        margin-bottom: 15px;
     ">
-        <img src="data:image/jpeg;base64,{img_base64}" 
-             style="width: 60px; height: 60px; border-radius: 10px; object-fit: cover;">
-        <div>
-            <h1 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 2.2em; line-height: 1.1;">
+        <img src="data:image/jpeg;base64,{img_base64}" style="width: 40px; height: 40px; border-radius: 5px;">
+        <div style="display: flex; flex-direction: column;">
+            <h2 style="color: #ffffff; margin: 0; font-family: 'Segoe UI'; font-size: 1.4em; line-height: 1;">
                 <span style="color: #FF4B4B;">Neuro</span>Expert
-            </h1>
-            <p style="color: #808495; font-style: italic; margin-top: 4px; font-size: 0.95em;">
-                Комплексная система синдромального нейропсихологического анализа
-            </p>
+            </h2>
+            <span style="color: #808495; font-style: italic; font-size: 0.75em;">Комплексная система синдромального нейропсихологического анализа</span>
         </div>
     </div>
 """, unsafe_allow_html=True)
@@ -229,7 +237,7 @@ with st.sidebar:
     st.markdown("---")
     try:
         with open("AppGuide.pdf", "rb") as f:
-            st.download_button("📚 СКАЧАТЬ PDF", f, "NeuroExpert_Guide.pdf", "application/pdf")
+            st.download_button("📚 СКАЧАТЬ ГАЙД", f, "NeuroExpert_Guide.pdf", "application/pdf")
     except:
         pass
 
