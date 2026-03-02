@@ -233,23 +233,32 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 1. СЕКРЕТНЫЙ ЗАМОК (Вживлять СЮДА) ---
-PASSWORD = "19890707Aa*" # <--- ЗАМЕНИ НА СВОЙ ПАРОЛЬ!
-
-if "auth" not in st.session_state:
-    st.session_state["auth"] = False
-
+# --- 1. СЕКРЕТНЫЙ ЗАМОК С ИНТРО-ЗАСТАВКОЙ ---
 if not st.session_state["auth"]:
-    # Показываем только поле ввода пароля (красное, в тон системе)
-    pwd_col1, pwd_col2 = st.columns([1, 2])
-    with pwd_col1:
-        pwd_input = st.text_input("🔑 Доступ к системе:", type="password")
-        if pwd_input == PASSWORD:
+    # Твоя шапка (пусть видят бренд)
+    # ... (код шапки) ...
+
+    pwd_input = st.text_input("🔑 Доступ к системе:", type="password")
+    if pwd_input == PASSWORD:
+        # --- ВОТ ОНО, СТРОГОЕ ИНТРО ---
+        with st.empty(): # Создаем временный контейнер
+            st.markdown(f"""
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; background-color: #0e1117;">
+                    <img src="data:image/jpeg;base64,{img_base64}" style="width: 80px; filter: grayscale(100%) brightness(1.5);">
+                    <h2 style="color: #FF4B4B; font-family: 'Segoe UI'; margin-top: 20px; letter-spacing: 2px;">INITIALIZING...</h2>
+                    <div style="width: 200px; height: 2px; background-color: #333; margin-top: 10px;">
+                        <div style="width: 100%; height: 100%; background-color: #FF4B4B; animation: load 1.5s ease-in-out;"></div>
+                    </div>
+                </div>
+                <style>
+                @keyframes load {{ 0% {{ width: 0%; }} 100% {{ width: 100%; }} }}
+                </style>
+            """, unsafe_allow_html=True)
+            import time
+            time.sleep(1.5) # Строго 1.5 секунды
             st.session_state["auth"] = True
             st.rerun()
-        elif pwd_input:
-            st.error("❌ Отказано")
-    st.stop() # ОСТАНАВЛИВАЕМ всё остальное!
+    st.stop()
 
 # --- 2. ЛЕВАЯ ПАНЕЛЬ (ПОЯВИТСЯ ТОЛЬКО ПОСЛЕ ПАРОЛЯ) ---
 with st.sidebar:
